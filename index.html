@@ -143,6 +143,10 @@
   .ings{list-style:none;margin:0;padding:0}
   .ings li{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px dashed var(--palm-line);font-size:15px}
   .ings li i{font-style:normal;color:var(--toast);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+  .optcap{font-size:13px;color:var(--cream-dim);margin:-2px 0 8px;line-height:1.55}
+  .ings.opt li{border-bottom-color:#1A3B2F;align-items:flex-start}
+  .ings.opt li i{color:var(--mint)}
+  .ings.opt em{display:block;font-style:normal;font-size:12.5px;color:var(--cream-dim);margin-top:3px;line-height:1.45}
   .steps{margin:0;padding-left:1.15em;font-size:15px;line-height:1.65}
   .steps li{margin-bottom:12px;padding-left:4px}
   .steps li::marker{color:var(--toast);font-family:Fraunces,serif}
@@ -470,6 +474,7 @@ const RECIPES = [
  {id:25,art:"garlic",name:"Hardee's-style garlic sauce",tag:"Sauces",tags:["Sauces"],time:"15 min",serves:34,
   blurb:"Toum. Makes about 510 g; a serving is 1 tbsp (15 g). The one people ask for by name.",
   k:105,p:0,c:1,f:11.5,keeps:"3 weeks refrigerated in a sealed jar",
+  boost:[["MSG","2 g","Rounds the raw-garlic edge without dulling the garlic itself"],["Citric acid","1/4 tsp","Sharpens it without adding more liquid, which would loosen the emulsion"]],
   ing:[["Garlic cloves, peeled","60 g"],["Sunflower or canola oil","400 g"],["Lemon juice","30 ml"],["Ice water","30 ml"],["Salt","1 tsp"]],
   steps:["Dry the garlic completely and pulse it with the salt in a food processor until it looks like a paste, scraping the sides twice.","Now the only rule that matters: add the oil in a thin thread, almost drop by drop at first, with the motor running. Rushing here is the single reason toum splits.","After about a third of the oil, alternate — a spoon of lemon juice, more oil, a spoon of ice water, more oil.","Keep going until it's white, thick and holds a peak. Total oil time should be 8 to 10 minutes.","Rest it in the fridge overnight. The raw garlic bite calms right down."],
   swap:"If it splits, don't throw it out. Start a clean bowl with one egg white and drizzle the broken sauce into it the same slow way."},
@@ -477,6 +482,7 @@ const RECIPES = [
  {id:26,art:"dip",name:"Hardee's-style cocktail sauce",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:18,
   blurb:"The pink burger sauce. Makes about 275 g; a serving is 1 tbsp (15 g).",
   k:80,p:0,c:1.5,f:8.5,keeps:"1 week refrigerated",
+  boost:[["MSG","1 g","The single thing most homemade versions are missing"],["Pickle brine","5 ml","The tang the fast-food one has and vinegar alone doesn't give"],["Onion powder","1/4 tsp","Powder over fresh onion — it won't ferment or turn bitter in the fridge"]],
   ing:[["Mayonnaise","200 g"],["Ketchup","60 g"],["Yellow mustard","10 g"],["White vinegar","5 ml"],["Sweet paprika","1/2 tsp"],["Garlic powder","1/4 tsp"],["Sugar or stevia","to taste"]],
   steps:["Whisk everything smooth in a bowl.","Taste and push it whichever way it needs — more ketchup for sweetness, more vinegar for sharpness.","Chill at least an hour. Straight after mixing it tastes like its parts; after an hour it tastes like one sauce."],
   swap:"A teaspoon of pickle brine instead of vinegar gets it closer to the fast-food version."},
@@ -484,6 +490,7 @@ const RECIPES = [
  {id:27,art:"dip",name:"Big burger special sauce",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:15,
   blurb:"Thicker and tangier than cocktail sauce, with relish through it. Makes about 230 g.",
   k:73,p:0,c:1.5,f:7.5,keeps:"1 week refrigerated",
+  boost:[["MSG","1 g","Depth behind the relish"],["Citric acid","1/8 tsp","Brightens it without thinning"],["Xanthan gum","0.4 g","Stops it weeping into the bun"]],
   ing:[["Mayonnaise","150 g"],["Ketchup","40 g"],["Pickle relish, drained","30 g"],["Yellow mustard","10 g"],["Onion powder","1/2 tsp"],["White vinegar","1 tsp"],["Black pepper","1/4 tsp"]],
   steps:["Drain the relish properly — wet relish thins the sauce and it never recovers.","Stir everything together until even.","Chill 2 hours before using."],
   swap:"Finely chopped dill pickle instead of relish if that's what you have."},
@@ -491,6 +498,7 @@ const RECIPES = [
  {id:28,art:"bottle",name:"Honey mustard",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:15,
   blurb:"The full-fat one. Makes about 230 g; a serving is 1 tbsp (15 g).",
   k:61,p:0.4,c:4,f:5,keeps:"2 weeks refrigerated",
+  boost:[["MSG","1 g","Savory backbone under the honey"],["Xanthan gum","0.3 g","Makes it cling to chicken instead of sliding off"]],
   ing:[["Mayonnaise","100 g"],["Dijon mustard","60 g"],["Honey","60 g"],["Lemon juice","10 ml"],["Cayenne","1 pinch"]],
   steps:["Whisk the mustard and honey together first so the honey doesn't sink.","Beat in the mayonnaise, then the lemon juice.","Taste. More honey rounds it, more mustard sharpens it, and the cayenne should sit just under noticeable."],
   swap:"Half Dijon, half whole-grain mustard gives it texture."},
@@ -498,6 +506,7 @@ const RECIPES = [
  {id:29,art:"jar",name:"Light honey mustard",tag:"Sauces",tags:["Sauces","Under 200"],time:"5 min",serves:15,
   blurb:"Same job, a quarter of the calories. Makes about 230 g.",
   k:15,p:1.5,c:2.5,f:0,keeps:"5 days refrigerated",
+  boost:[["MSG","1 g","Most useful here — no calories, and it buys back the richness the mayo used to carry"],["Xanthan gum","0.3 g","Gives the yogurt some body"]],
   ing:[["Greek yogurt (0%)","150 g"],["Dijon mustard","50 g"],["Honey","30 g"],["Lemon juice","10 ml"],["Salt","1 pinch"]],
   steps:["Whisk the honey into the mustard, then fold in the yogurt.","Add lemon juice and salt, and let it sit 20 minutes — yogurt sauces taste flat immediately after mixing.","Use it cold. It thins if you heat it."],
   swap:"Swap 40 g of the yogurt for mayonnaise if you want it richer — that takes it to about 27 kcal a tablespoon."},
@@ -505,6 +514,7 @@ const RECIPES = [
  {id:30,art:"bottle",name:"Smoky BBQ sauce",tag:"Sauces",tags:["Sauces","Under 200"],time:"20 min",serves:19,
   blurb:"Thick, sweet, cheap to make. Makes about 285 g.",
   k:19,p:0.2,c:4.5,f:0,keeps:"3 weeks refrigerated",
+  boost:[["MSG","1 g","Savory depth the ketchup can't supply"],["Liquid smoke","3 drops","The one ingredient that makes it read commercial"],["Xanthan gum","0.4 g","Thickens it without a long reduction"]],
   ing:[["Ketchup","200 g"],["Apple cider vinegar","30 ml"],["Brown sugar","40 g"],["Worcestershire sauce","15 ml"],["Smoked paprika","1 tsp"],["Garlic powder","1/2 tsp"],["Onion powder","1/2 tsp"],["Black pepper","1/4 tsp"]],
   steps:["Stir everything in a small pot over low heat.","Simmer 12 to 15 minutes, stirring now and then, until it coats the back of a spoon.","Cool completely before jarring — it thickens a lot as it cools, so don't reduce it too far."],
   swap:"Stevia instead of brown sugar drops it to about 6 kcal a tablespoon, but it loses the sticky body."},
@@ -512,6 +522,7 @@ const RECIPES = [
  {id:31,art:"jar",name:"Ranch",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:17,
   blurb:"Herby, pourable, better than bottled. Makes about 260 g.",
   k:52,p:0.5,c:0.5,f:5.5,keeps:"1 week refrigerated",
+  boost:[["MSG","1 g","Bottled ranch is full of glutamate — this is why yours tastes flatter"],["Xanthan gum","0.4 g","Pourable but clinging, instead of watery"],["Citric acid","1/8 tsp","Lifts the dried herbs"]],
   ing:[["Mayonnaise","120 g"],["Milk or buttermilk","80 ml"],["Greek yogurt (0%)","60 g"],["Dried dill","1 tsp"],["Dried parsley","1 tsp"],["Garlic powder","1/2 tsp"],["Onion powder","1/2 tsp"],["Lemon juice","1 tsp"],["Salt and pepper","to taste"]],
   steps:["Whisk the mayonnaise and yogurt smooth, then thin with the milk a little at a time until it pours.","Stir in the dried herbs and powders.","Rest it at least an hour. Dried herbs need that time to rehydrate or the sauce tastes dusty."],
   swap:"Fresh dill and parsley instead of dried — use three times as much and skip the resting."},
@@ -519,6 +530,7 @@ const RECIPES = [
  {id:32,art:"dip",name:"Chipotle mayo",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:13,
   blurb:"Smoky and hot. Makes about 200 g.",
   k:83,p:0.3,c:1,f:8.5,keeps:"1 week refrigerated",
+  boost:[["MSG","0.8 g","Carries the smoke further"],["Liquid smoke","2 drops","Only if your chipotle paste is mild"]],
   ing:[["Mayonnaise","150 g"],["Chipotle paste or harissa","30 g"],["Honey","10 g"],["Lime or lemon juice","10 ml"],["Smoked paprika","1/2 tsp"],["Salt","1 pinch"]],
   steps:["Stir the chipotle paste and honey together first.","Fold in the mayonnaise, then the juice.","Taste for heat before you add more paste — it climbs as it sits."],
   swap:"No chipotle in Duhok? Harissa plus an extra 1/2 tsp of smoked paprika gets very close."},
@@ -526,6 +538,7 @@ const RECIPES = [
  {id:33,art:"jar",name:"Lemon tahini sauce",tag:"Sauces",tags:["Sauces","Under 200"],time:"5 min",serves:15,
   blurb:"Goes on chicken, salad, wraps, everything. Makes about 225 g.",
   k:40,p:1.2,c:1.3,f:3.6,keeps:"5 days refrigerated",
+  boost:[["MSG","1 g","Tahini takes umami unusually well"]],
   ing:[["Tahini","100 g"],["Lemon juice","60 ml"],["Cold water","60 ml"],["Garlic, crushed","1 clove"],["Salt","1/2 tsp"]],
   steps:["Whisk the tahini with the lemon juice. It will seize into a stiff paste — this is supposed to happen, keep going.","Add the cold water a splash at a time, whisking. It loosens into a smooth pourable cream.","Stir in the garlic and salt. Thin with more water if you want it drizzling rather than spooning."],
   swap:"A tablespoon of yogurt makes it milder and paler."},
@@ -533,6 +546,7 @@ const RECIPES = [
  {id:34,art:"dip",name:"Garlic yogurt sauce",tag:"Sauces",tags:["Sauces","Under 200"],time:"5 min",serves:15,
   blurb:"What to use when toum is too many calories for the day. Makes about 235 g.",
   k:14,p:1.7,c:1,f:0.6,keeps:"4 days refrigerated",
+  boost:[["MSG","1 g","Free depth — this is the sauce that benefits most, since there's no fat doing the job"]],
   ing:[["Greek yogurt (0%)","200 g"],["Garlic, crushed","2 cloves"],["Lemon juice","15 ml"],["Olive oil","10 g"],["Salt","1/2 tsp"],["Dried mint","1/2 tsp"]],
   steps:["Crush the garlic with the salt into a paste — this stops raw garlic chunks turning harsh in the sauce.","Stir it through the yogurt with the lemon juice and mint.","Drizzle the olive oil on top rather than mixing it in. It reads richer that way for the same calories."],
   swap:"Strain the yogurt through cloth for an hour first and it becomes a thick dip instead of a sauce."}
@@ -732,6 +746,11 @@ function paintSheet(){
     '</div>'+
     '<h3>Ingredients</h3>'+
     '<ul class="ings">'+r.ing.map(i=>'<li><span>'+esc(i[0])+'</span><i>'+esc(scale(i[1],n))+'</i></li>').join("")+'</ul>'+
+    (r.boost && r.boost.length ?
+      '<h3>Make it taste commercial</h3>'+
+      '<p class="optcap">All optional. Weigh them — MSG wants 0.3 to 0.5% of the sauce\'s weight, and past about 1% it turns metallic. Dissolve powders in the vinegar or juice before mixing.</p>'+
+      '<ul class="ings opt">'+r.boost.map(b=>'<li><span>'+esc(b[0])+(b[2]?'<em>'+esc(b[2])+'</em>':'')+'</span><i>'+esc(scale(b[1],n))+'</i></li>').join("")+'</ul>'
+      : '')+
     '<h3>Method</h3>'+
     '<ol class="steps">'+r.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol>'+
     (r.swap ? '<div class="swap">'+esc(r.swap)+'</div>' : '<div style="height:22px"></div>')+
@@ -809,6 +828,9 @@ function paintForm(){
     '<div class="fone"><label class="field"><span>Method — one step per line</span>'+
       '<textarea id="fSteps" placeholder="Heat the oven to 180°C.&#10;Mix everything and rest 5 minutes.">'+
       esc((r.steps||[]).join("\n"))+'</textarea></label></div>'+
+    '<div class="fone"><label class="field"><span>Optional extras (optional) — name | amount | why</span>'+
+      '<textarea id="fBoost" placeholder="MSG | 1 g | savory depth&#10;Xanthan gum | 0.4 g | keeps it from running">'+
+      esc((r.boost||[]).map(b=>[b[0],b[1],b[2]||""].join(" | ")).join("\n"))+'</textarea></label></div>'+
     '<div class="fone">'+inp("fSwap","Tip or swap (optional)", r.swap, "text", "")+'</div>'+
     '<button class="sheet-add" id="fSave">'+(editing ? "Save changes" : "Save recipe")+'</button>';
 
@@ -827,6 +849,8 @@ function saveForm(){
   const ing = $("#fIng").value.split("\n").map(l => l.trim()).filter(Boolean)
     .map(l => { const i = l.indexOf("|"); return i === -1 ? [l, ""] : [l.slice(0,i).trim(), l.slice(i+1).trim()]; });
   const steps = $("#fSteps").value.split("\n").map(l => l.trim()).filter(Boolean);
+  const boost = $("#fBoost").value.split("\n").map(l => l.trim()).filter(Boolean)
+    .map(l => { const parts = l.split("|").map(x => x.trim()); return [parts[0]||"", parts[1]||"", parts[2]||""]; });
 
   let err = "";
   if(!name) err = "Give the recipe a name.";
@@ -848,7 +872,7 @@ function saveForm(){
     time: $("#fTime").value.trim(), serves: serves,
     k: Math.round(k), p: p, c: num("#fC", 0), f: num("#fF", 0),
     blurb: $("#fBlurb").value.trim(), keeps: $("#fKeeps").value.trim(),
-    ing: ing, steps: steps, swap: $("#fSwap").value.trim()
+    ing: ing, boost: boost, steps: steps, swap: $("#fSwap").value.trim()
   };
   if(editing){ customs = customs.map(x => x.id === editing.id ? rec : x); }
   else { customs.push(rec); }

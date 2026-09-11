@@ -1,5 +1,5 @@
 /* Coconut Kitchen service worker — app shell cached, works with no connection. */
-const CACHE = "coconut-kitchen-v2";
+const CACHE = "coconut-kitchen-v3";
 const SHELL = [
   "./",
   "./index.html",
