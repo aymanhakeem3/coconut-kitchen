@@ -96,6 +96,14 @@
   .field input,.field select,.field textarea{width:100%;background:var(--palm-deep);border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px}
   .field textarea{min-height:110px;resize:vertical;line-height:1.5}
   .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--toast);outline-offset:1px}
+  .catrow{display:flex;gap:10px;margin-bottom:10px}
+  .catrow input{flex:1;min-width:0;background:var(--palm-deep);border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px}
+  .catrow input:focus{outline:2px solid var(--toast);outline-offset:1px}
+  .cattags{display:flex;flex-wrap:wrap;gap:8px}
+  .cattag{display:inline-flex;align-items:center;gap:8px;background:var(--palm-deep);border:1px solid var(--palm-line);border-radius:99px;padding:6px 8px 6px 14px;font-size:13.5px}
+  .cattag button{background:none;border:none;color:var(--cream-dim);font:inherit;font-size:17px;line-height:1;cursor:pointer;padding:0 4px}
+  .cattag button:hover{color:#E8956B}
+  .cattag.builtin{color:var(--cream-dim);padding:6px 14px}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap}
   .ghost{background:transparent;border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:10px 14px;font:inherit;font-size:14px;cursor:pointer}
   .ghost:hover{border-color:var(--cream-dim)}
@@ -166,7 +174,7 @@
 <main class="wrap">
   <div class="mast">
     <h1>Coconut<br>Kitchen</h1>
-    <p>Twenty-four recipes built on one bag of coconut flour, counted for a 1,650 kcal day. No protein powder, weighed in grams, and it remembers your day.</p>
+    <p>Coconut-flour cooking and sauces worth making at home, counted against a calorie-deficit day. No protein powder, weighed in grams, remembers where you are.</p>
   </div>
 
   <section class="install" id="installPanel" hidden>
@@ -185,6 +193,17 @@
   <p class="empty" id="empty" hidden>Nothing matches. Try a shorter word.</p>
 
   <button class="addown" id="newRecipe">Add your own recipe</button>
+
+  <section class="panel">
+    <h2>Categories</h2>
+    <p class="phint">Breakfast, Savory, Sauces and Dessert are built in. Anything you add here becomes a filter above and an option in the recipe form.</p>
+    <div class="catrow">
+      <input id="catName" type="text" maxlength="20" placeholder="Drinks, Marinades, Soups…" aria-label="New category name">
+      <button class="ghost" id="catAdd">Add</button>
+    </div>
+    <p class="ferr" id="catErr"></p>
+    <div class="cattags" id="catList"></div>
+  </section>
 
   <section class="panel">
     <h2>Your targets</h2>
@@ -270,6 +289,10 @@ const ART = {
  loaf:'<rect x="12" y="31" width="56" height="29" rx="9" class="a1"/><rect x="12" y="24" width="38" height="11" rx="5.5" class="a3"/><path d="M52 33 v25" class="s1"/>',
  ramekin:'<ellipse cx="40" cy="34" rx="21" ry="9" class="a1"/><path d="M21 38 h38 l-5 26 h-28 z" class="a3"/><path d="M30 46 v14 M40 46 v14 M50 46 v14" class="s1"/>',
  biscotti:'<rect x="15" y="27" width="48" height="14" rx="5" class="a1" transform="rotate(-14 39 34)"/><rect x="15" y="46" width="48" height="14" rx="5" class="a3" transform="rotate(-14 39 53)"/>',
+ bottle:'<rect x="30" y="8" width="20" height="9" rx="3" class="a3"/><path d="M33 17 h14 v9 l7 9 v29 a7 7 0 0 1 -7 7 h-14 a7 7 0 0 1 -7 -7 v-29 l7 -9 z" class="a1"/><rect x="29" y="40" width="22" height="15" rx="3" class="a3"/>',
+ dip:'<ellipse cx="40" cy="37" rx="29" ry="10" class="a1"/><path d="M11 37 a29 25 0 0 0 58 0 z" class="a3"/><path d="M30 35 q10 -6 20 0" class="s1"/>',
+ jar:'<rect x="18" y="13" width="44" height="12" rx="4" class="a2"/><rect x="22" y="24" width="36" height="42" rx="7" class="a3"/><path d="M22 42 h36 v17 a7 7 0 0 1 -7 7 h-22 a7 7 0 0 1 -7 -7 z" class="a1"/>',
+ garlic:'<path d="M40 13 c-15 13 -19 23 -19 32 a19 19 0 0 0 38 0 c0 -9 -4 -19 -19 -32 z" class="a3"/><path d="M40 24 v38 M29 36 q-4 9 -2 17 M51 36 q4 9 2 17" class="s1"/>',
  rusk:'<rect x="13" y="25" width="54" height="15" rx="7" class="a1"/><rect x="13" y="46" width="54" height="15" rx="7" class="a3"/><circle cx="29" cy="32" r="2.8" class="a4"/><circle cx="45" cy="32" r="2.8" class="a4"/>'
 };
 function art(kind){ return '<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + (ART[kind]||ART.bowl) + '</svg>'; }
@@ -442,7 +465,77 @@ const RECIPES = [
   k:115,p:4.5,c:2,f:8,keeps:"2 weeks refrigerated, 2 months frozen",
   ing:[["Coconut flour","40 g"],["Smooth peanut butter","50 g"],["Stevia","2 tbsp"],["Water or milk","30–45 ml"],["Salt","1 pinch"]],
   steps:["Soften the peanut butter slightly and stir in the stevia and salt.","Stir in the coconut flour, then add liquid a tablespoon at a time, kneading by hand until the dough is smooth and pliable.","Roll 8 to 10 bite-sized balls.","Store cold and take 2 straight from the fridge with hot coffee."],
-  swap:"Dust them in cinnamon or unsweetened cocoa before chilling."}
+  swap:"Dust them in cinnamon or unsweetened cocoa before chilling."},
+
+ {id:25,art:"garlic",name:"Hardee's-style garlic sauce",tag:"Sauces",tags:["Sauces"],time:"15 min",serves:34,
+  blurb:"Toum. Makes about 510 g; a serving is 1 tbsp (15 g). The one people ask for by name.",
+  k:105,p:0,c:1,f:11.5,keeps:"3 weeks refrigerated in a sealed jar",
+  ing:[["Garlic cloves, peeled","60 g"],["Sunflower or canola oil","400 g"],["Lemon juice","30 ml"],["Ice water","30 ml"],["Salt","1 tsp"]],
+  steps:["Dry the garlic completely and pulse it with the salt in a food processor until it looks like a paste, scraping the sides twice.","Now the only rule that matters: add the oil in a thin thread, almost drop by drop at first, with the motor running. Rushing here is the single reason toum splits.","After about a third of the oil, alternate — a spoon of lemon juice, more oil, a spoon of ice water, more oil.","Keep going until it's white, thick and holds a peak. Total oil time should be 8 to 10 minutes.","Rest it in the fridge overnight. The raw garlic bite calms right down."],
+  swap:"If it splits, don't throw it out. Start a clean bowl with one egg white and drizzle the broken sauce into it the same slow way."},
+
+ {id:26,art:"dip",name:"Hardee's-style cocktail sauce",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:18,
+  blurb:"The pink burger sauce. Makes about 275 g; a serving is 1 tbsp (15 g).",
+  k:80,p:0,c:1.5,f:8.5,keeps:"1 week refrigerated",
+  ing:[["Mayonnaise","200 g"],["Ketchup","60 g"],["Yellow mustard","10 g"],["White vinegar","5 ml"],["Sweet paprika","1/2 tsp"],["Garlic powder","1/4 tsp"],["Sugar or stevia","to taste"]],
+  steps:["Whisk everything smooth in a bowl.","Taste and push it whichever way it needs — more ketchup for sweetness, more vinegar for sharpness.","Chill at least an hour. Straight after mixing it tastes like its parts; after an hour it tastes like one sauce."],
+  swap:"A teaspoon of pickle brine instead of vinegar gets it closer to the fast-food version."},
+
+ {id:27,art:"dip",name:"Big burger special sauce",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:15,
+  blurb:"Thicker and tangier than cocktail sauce, with relish through it. Makes about 230 g.",
+  k:73,p:0,c:1.5,f:7.5,keeps:"1 week refrigerated",
+  ing:[["Mayonnaise","150 g"],["Ketchup","40 g"],["Pickle relish, drained","30 g"],["Yellow mustard","10 g"],["Onion powder","1/2 tsp"],["White vinegar","1 tsp"],["Black pepper","1/4 tsp"]],
+  steps:["Drain the relish properly — wet relish thins the sauce and it never recovers.","Stir everything together until even.","Chill 2 hours before using."],
+  swap:"Finely chopped dill pickle instead of relish if that's what you have."},
+
+ {id:28,art:"bottle",name:"Honey mustard",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:15,
+  blurb:"The full-fat one. Makes about 230 g; a serving is 1 tbsp (15 g).",
+  k:61,p:0.4,c:4,f:5,keeps:"2 weeks refrigerated",
+  ing:[["Mayonnaise","100 g"],["Dijon mustard","60 g"],["Honey","60 g"],["Lemon juice","10 ml"],["Cayenne","1 pinch"]],
+  steps:["Whisk the mustard and honey together first so the honey doesn't sink.","Beat in the mayonnaise, then the lemon juice.","Taste. More honey rounds it, more mustard sharpens it, and the cayenne should sit just under noticeable."],
+  swap:"Half Dijon, half whole-grain mustard gives it texture."},
+
+ {id:29,art:"jar",name:"Light honey mustard",tag:"Sauces",tags:["Sauces","Under 200"],time:"5 min",serves:15,
+  blurb:"Same job, a quarter of the calories. Makes about 230 g.",
+  k:15,p:1.5,c:2.5,f:0,keeps:"5 days refrigerated",
+  ing:[["Greek yogurt (0%)","150 g"],["Dijon mustard","50 g"],["Honey","30 g"],["Lemon juice","10 ml"],["Salt","1 pinch"]],
+  steps:["Whisk the honey into the mustard, then fold in the yogurt.","Add lemon juice and salt, and let it sit 20 minutes — yogurt sauces taste flat immediately after mixing.","Use it cold. It thins if you heat it."],
+  swap:"Swap 40 g of the yogurt for mayonnaise if you want it richer — that takes it to about 27 kcal a tablespoon."},
+
+ {id:30,art:"bottle",name:"Smoky BBQ sauce",tag:"Sauces",tags:["Sauces","Under 200"],time:"20 min",serves:19,
+  blurb:"Thick, sweet, cheap to make. Makes about 285 g.",
+  k:19,p:0.2,c:4.5,f:0,keeps:"3 weeks refrigerated",
+  ing:[["Ketchup","200 g"],["Apple cider vinegar","30 ml"],["Brown sugar","40 g"],["Worcestershire sauce","15 ml"],["Smoked paprika","1 tsp"],["Garlic powder","1/2 tsp"],["Onion powder","1/2 tsp"],["Black pepper","1/4 tsp"]],
+  steps:["Stir everything in a small pot over low heat.","Simmer 12 to 15 minutes, stirring now and then, until it coats the back of a spoon.","Cool completely before jarring — it thickens a lot as it cools, so don't reduce it too far."],
+  swap:"Stevia instead of brown sugar drops it to about 6 kcal a tablespoon, but it loses the sticky body."},
+
+ {id:31,art:"jar",name:"Ranch",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:17,
+  blurb:"Herby, pourable, better than bottled. Makes about 260 g.",
+  k:52,p:0.5,c:0.5,f:5.5,keeps:"1 week refrigerated",
+  ing:[["Mayonnaise","120 g"],["Milk or buttermilk","80 ml"],["Greek yogurt (0%)","60 g"],["Dried dill","1 tsp"],["Dried parsley","1 tsp"],["Garlic powder","1/2 tsp"],["Onion powder","1/2 tsp"],["Lemon juice","1 tsp"],["Salt and pepper","to taste"]],
+  steps:["Whisk the mayonnaise and yogurt smooth, then thin with the milk a little at a time until it pours.","Stir in the dried herbs and powders.","Rest it at least an hour. Dried herbs need that time to rehydrate or the sauce tastes dusty."],
+  swap:"Fresh dill and parsley instead of dried — use three times as much and skip the resting."},
+
+ {id:32,art:"dip",name:"Chipotle mayo",tag:"Sauces",tags:["Sauces"],time:"5 min",serves:13,
+  blurb:"Smoky and hot. Makes about 200 g.",
+  k:83,p:0.3,c:1,f:8.5,keeps:"1 week refrigerated",
+  ing:[["Mayonnaise","150 g"],["Chipotle paste or harissa","30 g"],["Honey","10 g"],["Lime or lemon juice","10 ml"],["Smoked paprika","1/2 tsp"],["Salt","1 pinch"]],
+  steps:["Stir the chipotle paste and honey together first.","Fold in the mayonnaise, then the juice.","Taste for heat before you add more paste — it climbs as it sits."],
+  swap:"No chipotle in Duhok? Harissa plus an extra 1/2 tsp of smoked paprika gets very close."},
+
+ {id:33,art:"jar",name:"Lemon tahini sauce",tag:"Sauces",tags:["Sauces","Under 200"],time:"5 min",serves:15,
+  blurb:"Goes on chicken, salad, wraps, everything. Makes about 225 g.",
+  k:40,p:1.2,c:1.3,f:3.6,keeps:"5 days refrigerated",
+  ing:[["Tahini","100 g"],["Lemon juice","60 ml"],["Cold water","60 ml"],["Garlic, crushed","1 clove"],["Salt","1/2 tsp"]],
+  steps:["Whisk the tahini with the lemon juice. It will seize into a stiff paste — this is supposed to happen, keep going.","Add the cold water a splash at a time, whisking. It loosens into a smooth pourable cream.","Stir in the garlic and salt. Thin with more water if you want it drizzling rather than spooning."],
+  swap:"A tablespoon of yogurt makes it milder and paler."},
+
+ {id:34,art:"dip",name:"Garlic yogurt sauce",tag:"Sauces",tags:["Sauces","Under 200"],time:"5 min",serves:15,
+  blurb:"What to use when toum is too many calories for the day. Makes about 235 g.",
+  k:14,p:1.7,c:1,f:0.6,keeps:"4 days refrigerated",
+  ing:[["Greek yogurt (0%)","200 g"],["Garlic, crushed","2 cloves"],["Lemon juice","15 ml"],["Olive oil","10 g"],["Salt","1/2 tsp"],["Dried mint","1/2 tsp"]],
+  steps:["Crush the garlic with the salt into a paste — this stops raw garlic chunks turning harsh in the sauce.","Stir it through the yogurt with the lemon juice and mint.","Drizzle the olive oil on top rather than mixing it in. It reads richer that way for the same calories."],
+  swap:"Strain the yogurt through cloth for an hour first and it becomes a thick dip instead of a sauce."}
 ];
 </script>
 <script>
@@ -460,11 +553,15 @@ let toastTimer;
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"), 2200); }
 
 /* ---------- state ---------- */
-const FILTERS = ["All","Breakfast","Savory","Dessert","High protein","Under 200","Batch prep","Coffee dipper","No bake","My recipes"];
+const BASE_CATS = ["Breakfast","Savory","Sauces","Dessert"];
+const TRAITS = ["High protein","Under 200","Batch prep","Coffee dipper","No bake","My recipes"];
+const RESERVED = ["All"].concat(BASE_CATS, TRAITS).map(x => x.toLowerCase());
 let active = "All", query = "", sheetServes = 1, current = null, editing = null, formArt = "bowl";
 
 TARGETS = Object.assign({kcal:1650, protein:130}, store.get("ck.targets", {}));
 let customs = store.get("ck.customs", []);
+let cats = (store.get("ck.cats", []) || []).filter(c => typeof c === "string");
+const allCats = () => BASE_CATS.concat(cats);
 const savedDay = store.get("ck.plate", null);
 let plate = (savedDay && savedDay.date === todayKey()) ? savedDay.items : {};
 
@@ -472,11 +569,16 @@ const all = () => RECIPES.concat(customs);
 const byId = id => all().find(r => r.id == id);
 function savePlate(){ store.set("ck.plate", {date: todayKey(), items: plate}); }
 function saveCustoms(){ store.set("ck.customs", customs); paintSavedNote(); }
+function saveCats(){ store.set("ck.cats", cats); renderFilters(); paintCatList(); }
 
 /* ---------- filters and search ---------- */
 const listEl = $("#list"), emptyEl = $("#empty");
-$("#filters").innerHTML = FILTERS.map(f =>
-  '<button class="chip" data-f="'+f+'" aria-pressed="'+(f===active)+'">'+f+'</button>').join("");
+function renderFilters(){
+  const list = ["All"].concat(allCats(), TRAITS);
+  if(list.indexOf(active) === -1) active = "All";
+  $("#filters").innerHTML = list.map(f =>
+    '<button class="chip" data-f="'+esc(f)+'" aria-pressed="'+(f===active)+'">'+esc(f)+'</button>').join("");
+}
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest(".chip"); if(!b) return;
   active = b.dataset.f;
@@ -542,6 +644,41 @@ function gauge(){
 }
 $("#gClear").addEventListener("click", () => { plate = {}; savePlate(); render(); gauge(); if(current) paintSheetButton(); });
 
+/* ---------- categories ---------- */
+function paintCatList(){
+  $("#catList").innerHTML =
+    BASE_CATS.map(c => '<span class="cattag builtin">'+esc(c)+'</span>').join("") +
+    cats.map(c => '<span class="cattag">'+esc(c)+'<button data-cat="'+esc(c)+'" aria-label="Delete '+esc(c)+'">×</button></span>').join("");
+}
+$("#catList").addEventListener("click", e => {
+  const b = e.target.closest("[data-cat]"); if(!b) return;
+  const name = b.dataset.cat;
+  const used = customs.filter(r => r.tag === name).length;
+  if(used){
+    $("#catErr").textContent = name + " is still used by " + used + (used===1 ? " recipe" : " recipes") + ". Move them to another category first.";
+    return;
+  }
+  cats = cats.filter(c => c !== name);
+  $("#catErr").textContent = "";
+  saveCats(); render();
+});
+function addCat(){
+  const name = $("#catName").value.trim().replace(/\s+/g, " ");
+  let err = "";
+  if(!name) err = "Type a name first.";
+  else if(name.length > 20) err = "Keep it under 20 characters.";
+  else if(RESERVED.indexOf(name.toLowerCase()) !== -1) err = name + " is already a filter.";
+  else if(cats.some(c => c.toLowerCase() === name.toLowerCase())) err = "You already have that one.";
+  $("#catErr").textContent = err;
+  if(err) return;
+  cats.push(name);
+  $("#catName").value = "";
+  saveCats(); render();
+  toast(name + " added");
+}
+$("#catAdd").addEventListener("click", addCat);
+$("#catName").addEventListener("keydown", e => { if(e.key === "Enter") addCat(); });
+
 /* ---------- targets ---------- */
 $("#tK").value = TARGETS.kcal; $("#tP").value = TARGETS.protein;
 function readTargets(){
@@ -600,8 +737,9 @@ function paintSheet(){
     (r.swap ? '<div class="swap">'+esc(r.swap)+'</div>' : '<div style="height:22px"></div>')+
     '<button class="sheet-add" id="sAdd"></button>'+
     (r.custom ? '<div class="btnrow" style="margin:-30px 0 44px"><button class="ghost" id="sEdit">Edit recipe</button><button class="ghost danger" id="sDel">Delete</button></div>' : '');
-  $("#minus").onclick = () => { if(sheetServes>1){ sheetServes--; paintSheet(); } };
-  $("#plus").onclick  = () => { if(sheetServes<40){ sheetServes++; paintSheet(); } };
+  const inc = (r.serves || 1) >= 12 ? Math.ceil(r.serves / 2) : 1;
+  $("#minus").onclick = () => { if(sheetServes - inc >= inc){ sheetServes -= inc; paintSheet(); } };
+  $("#plus").onclick  = () => { if(sheetServes + inc <= (r.serves || 1) * 4){ sheetServes += inc; paintSheet(); } };
   $("#sAdd").onclick  = () => toggle(r.id);
   if(r.custom){
     $("#sEdit").onclick = () => { closeSheet(); openForm(r); };
@@ -651,7 +789,7 @@ function paintForm(){
         '<button type="button" class="artbtn" data-art="'+k+'" aria-pressed="'+(k===formArt)+'" aria-label="'+k+'">'+art(k)+'</button>').join("")+'</div></div>'+
     '<div class="fgrid">'+
       '<label class="field"><span>Category</span><select id="fTag">'+
-        ["Breakfast","Savory","Dessert"].map(t=>'<option'+(r.tag===t?" selected":"")+'>'+t+'</option>').join("")+
+        allCats().map(t=>'<option'+(r.tag===t?" selected":"")+'>'+esc(t)+'</option>').join("")+
       '</select></label>'+
       inp("fTime","Time", r.time, "text", "20 min")+
     '</div>'+
@@ -827,7 +965,7 @@ if("serviceWorker" in navigator && !isFile){
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
 }
 
-paintSavedNote(); render(); gauge();
+paintSavedNote(); paintCatList(); renderFilters(); render(); gauge();
 </script>
 </body>
 </html>
