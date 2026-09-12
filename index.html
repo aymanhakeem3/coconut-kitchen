@@ -32,7 +32,7 @@
   .gauge{position:sticky;top:0;z-index:30;background:var(--palm-deep);border-bottom:1px solid var(--palm-line);padding:14px 0 12px}
   .gauge-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
   .kcal{font-family:Fraunces,Georgia,serif;font-size:40px;font-weight:800;line-height:.9;letter-spacing:-.02em;color:var(--toast);font-variant-numeric:tabular-nums}
-  .kcal small{font-size:15px;font-weight:600;color:var(--cream-dim);margin-left:6px;letter-spacing:0}
+  .kcal small{font-size:15px;font-weight:600;color:var(--cream-dim);margin-inline-start:6px;letter-spacing:0}
   .gauge-note{font-size:12.5px;color:var(--cream-dim);text-align:end;max-width:46%}
   .bars{margin-top:12px;display:grid;gap:7px}
   .bar{height:7px;border-radius:99px;background:#173A2E;overflow:hidden}
@@ -57,14 +57,15 @@
   .count{font-size:12.5px;color:var(--cream-dim);padding-bottom:8px}
   .list{list-style:none;margin:0;padding:0;border-top:1px solid var(--palm-line)}
   .row{display:flex;align-items:stretch;border-bottom:1px solid var(--palm-line)}
-  .row-main{flex:1;display:flex;align-items:center;gap:13px;background:none;border:none;color:inherit;font:inherit;text-align:left;padding:13px 4px 13px 0;cursor:pointer;min-width:0}
+  .row-main{flex:1;display:flex;align-items:center;gap:13px;background:none;border:none;color:inherit;font:inherit;text-align:start;padding-block:13px;padding-inline:0 4px;cursor:pointer;min-width:0}
   .thumb{flex:0 0 46px;width:46px;height:46px;border-radius:11px;background:var(--palm-deep);display:flex;align-items:center;justify-content:center}
   .thumb svg{width:34px;height:34px;display:block}
-  .row-txt{flex:1;min-width:0}
+  .row-txt{flex:1;min-width:0;text-align:start}
+  .row-meta{text-wrap:pretty}
   .row-name{font-size:16px;font-weight:500;letter-spacing:-.01em;display:block}
   .row-meta{display:block;font-size:12.5px;color:var(--cream-dim);margin-top:2px}
   .row-k{font-family:Fraunces,Georgia,serif;font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;flex:0 0 auto}
-  .row-k i{font-style:normal;font-size:11px;color:var(--cream-dim);font-family:Inter,sans-serif;margin-left:3px}
+  .row-k i{font-style:normal;font-size:11px;color:var(--cream-dim);font-family:Inter,sans-serif;margin-inline-start:3px}
   .add{flex:0 0 46px;background:none;border:none;border-inline-start:1px solid var(--palm-line);color:var(--mint);font-size:24px;line-height:1;cursor:pointer}
   .add.on{color:var(--char);background:var(--mint);font-weight:700}
   .empty{padding:40px 0;color:var(--cream-dim);font-size:14.5px}
