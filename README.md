@@ -40,6 +40,9 @@ work the same way if you'd rather not use GitHub.
 - **Bilingual recipes of your own.** The editor has English and العربية tabs.
   Numbers, picture and category are shared; name, ingredients and method are
   stored per language. Fill one side only and it shows in both.
+- **Cooking mode.** One step at a time in large type, with the screen kept awake
+  and a tap-to-start timer on any step that has a duration in it. Works in both
+  languages.
 - **Share any recipe.** Open a recipe and use *Share card* for a PNG recipe card
   (it goes straight into WhatsApp on Android via the native share sheet) or
   *Share as text* for plain text you can paste anywhere.

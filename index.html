@@ -123,11 +123,34 @@
   .artbtn{flex:0 0 auto;width:52px;height:52px;border-radius:12px;background:var(--palm-deep);border:1px solid var(--palm-line);cursor:pointer;padding:6px}
   .artbtn svg{width:100%;height:100%}
   .artbtn[aria-pressed="true"]{border-color:var(--mint);background:#12332A}
+  .cook{position:fixed;inset:0;z-index:70;background:var(--palm);display:none;flex-direction:column;padding:0 22px env(safe-area-inset-bottom)}
+  .cook.open{display:flex}
+  .cook-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;flex:0 0 auto}
+  .cook-count{font-size:13.5px;color:var(--cream-dim);letter-spacing:.02em}
+  .cook-x{background:none;border:none;color:var(--cream-dim);font-size:22px;line-height:1;cursor:pointer;padding:4px 6px}
+  .cook-track{height:3px;background:#173A2E;border-radius:99px;overflow:hidden;flex:0 0 auto}
+  .cook-track span{display:block;height:100%;background:var(--toast);width:0;transition:width .25s}
+  .cook-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;justify-content:center;padding:24px 0}
+  .cook-step{font-size:clamp(23px,6.2vw,30px);line-height:1.5;font-weight:500;letter-spacing:-.01em}
+  .cook-title{font-family:Fraunces,Georgia,serif;font-size:15px;font-weight:600;color:var(--mint);letter-spacing:.06em;text-transform:uppercase;margin:0 0 18px}
+  html[dir="rtl"] .cook-title{font-family:Cairo,sans-serif;letter-spacing:0;text-transform:none}
+  html[dir="rtl"] .cook-step{font-family:Cairo,sans-serif;line-height:1.75}
+  .cook-list{list-style:none;margin:0;padding:0}
+  .cook-list li{display:flex;justify-content:space-between;gap:18px;padding:13px 0;border-bottom:1px dashed var(--palm-line);font-size:18.5px}
+  .cook-list li i{font-style:normal;color:var(--toast);white-space:nowrap}
+  .cook-hint{font-size:14.5px;color:var(--cream-dim);margin:16px 0 0}
+  .timer{margin-top:30px}
+  .timer button{background:transparent;border:1px solid var(--toast);color:var(--toast);border-radius:99px;padding:13px 26px;font:inherit;font-size:17px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums}
+  .timer button.running{background:var(--toast);color:var(--char)}
+  .cook-nav{display:flex;gap:12px;padding:12px 0 22px;flex:0 0 auto}
+  .cook-btn{flex:1;padding:17px;border:none;border-radius:13px;background:var(--cream);color:var(--char);font:inherit;font-size:16.5px;font-weight:700;cursor:pointer}
+  .cook-btn.ghosty{flex:0 0 34%;background:transparent;border:1px solid var(--palm-line);color:var(--cream-dim);font-weight:500}
+  .cook-btn:disabled{opacity:.35}
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--cream);color:var(--char);padding:11px 18px;border-radius:99px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:90}
   .toast.show{opacity:1;transform:translateX(-50%)}
   .langbtn{position:absolute;top:30px;inset-inline-end:0;background:transparent;border:1px solid var(--palm-line);color:var(--cream);border-radius:99px;padding:7px 15px;font-size:13.5px;font-family:Cairo,Inter,sans-serif;cursor:pointer}
   .langbtn:hover{border-color:var(--cream-dim)}
-  .shareRow{display:flex;gap:10px;margin:-30px 0 14px}
+  .shareRow{display:flex;gap:10px;margin:0 0 14px}
   .shareRow button{flex:1;background:transparent;border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:12px 10px;font:inherit;font-size:14px;cursor:pointer}
   .shareRow button:hover{border-color:var(--mint);color:var(--mint)}
   html[dir="rtl"] body{font-family:Cairo,"Segoe UI",Tahoma,sans-serif}
@@ -277,6 +300,19 @@
   </div>
 </div>
 
+<div class="cook" id="cook" role="dialog" aria-modal="true" aria-label="Cooking mode">
+  <div class="cook-bar">
+    <span class="cook-count" id="cookCount"></span>
+    <button class="cook-x" id="cookExit" aria-label="Exit">✕</button>
+  </div>
+  <div class="cook-track" id="cookTrack"><span id="cookFill"></span></div>
+  <div class="cook-body" id="cookBody"></div>
+  <div class="cook-nav">
+    <button class="cook-btn ghosty" id="cookPrev"></button>
+    <button class="cook-btn" id="cookNext"></button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Recipe">
@@ -326,6 +362,7 @@ const RECIPES = [
  {id:1,art:"pancakes",name:"Coconut pancakes",tag:"Breakfast",tags:["Breakfast"],time:"12 min",serves:1,
   blurb:"Thick, slightly sweet, holds up to a spoon of yogurt on top.",
   k:295,p:21,c:11,f:17,
+  boost:[["Vanilla extract","1 tsp","Reads as sweeter without adding sweetener"],["Salt","1 pinch","Pancakes taste flat without it and nobody can say why"],["Baking soda","1/8 tsp","Browns faster, so you get colour before the inside dries out"]],
   ing:[["Coconut flour","14 g"],["Eggs","3"],["Milk","60 ml"],["Baking powder","1/2 tsp"],["Cinnamon","1 pinch"],["Stevia","to taste"]],
   steps:["Whisk eggs and milk, then beat in coconut flour, baking powder, cinnamon and stevia.","Rest 5 minutes. If it stiffens past a thick batter, loosen with a splash of milk.","Cook 4 small pancakes on medium-low, 2 minutes a side. Small ones flip cleanly, large ones tear.","Stack and top with berries or a spoon of Greek yogurt."],
   swap:"Two eggs plus two whites drops it to 225 kcal and keeps the protein at 19 g."},
@@ -333,6 +370,7 @@ const RECIPES = [
  {id:2,art:"bowl",name:"Coconut porridge",tag:"Breakfast",tags:["Breakfast","Under 200"],time:"6 min",serves:1,
   blurb:"Warm bowl for cold mornings, no oats needed.",
   k:180,p:12,c:18,f:3,
+  boost:[["Salt","1 pinch","Unsalted porridge tastes like paste"],["Vanilla extract","1/2 tsp","Rounds the milk"],["Xanthan gum","0.2 g","Stays creamy instead of splitting as it cools"]],
   ing:[["Coconut flour","14 g"],["Milk","200 ml"],["Egg white","1"],["Cinnamon","1/4 tsp"],["Stevia","to taste"],["Berries","50 g"]],
   steps:["Warm the milk in a small pot over low heat.","Whisk in coconut flour and cinnamon, stirring constantly for 2 minutes until it thickens.","Off the heat, whisk in the egg white fast so it doesn't scramble. Return to low heat for 30 seconds.","Sweeten, pour into a bowl, top with berries."],
   swap:"12 g of chia at the end makes it thicker and far more filling (+58 kcal)."},
@@ -340,6 +378,7 @@ const RECIPES = [
  {id:3,art:"crepe",name:"Coconut crepes",tag:"Breakfast",tags:["Breakfast"],time:"15 min",serves:1,
   blurb:"Thin and foldable. Works sweet or savory.",
   k:195,p:15,c:6,f:11,
+  boost:[["Salt","1 pinch","Even for the sweet version"],["Melted butter","5 g","In the batter, not the pan — this is how creperies get lacy edges"]],
   ing:[["Coconut flour","7 g"],["Eggs","2"],["Milk","60 ml"],["Salt","1 pinch"]],
   steps:["Blend or whisk everything until completely smooth, then rest 5 minutes.","Heat a nonstick pan on medium-low and wipe it with the barest film of oil.","Pour a thin layer, swirl, and cook 90 seconds until the edges lift. Flip carefully — more delicate than wheat crepes.","Makes 3. Fill with yogurt and fruit, or with the tuna patties below."],
   swap:"Savory version: add garlic powder and black pepper to the batter."},
@@ -347,6 +386,7 @@ const RECIPES = [
  {id:4,art:"tenders",name:"Crusted chicken tenders",tag:"Savory",tags:["Savory","High protein"],time:"30 min",serves:2,
   blurb:"Oven or air fryer, properly crunchy, no deep frying.",
   k:200,p:30,c:5,f:7,
+  boost:[["MSG","1 g","Mixed into the coating, not the chicken"],["Baking powder","1/2 tsp","In the coating — raises the pH and makes the crust noticeably crisper"],["Greek yogurt (0%)","60 g","Soak the strips 30 minutes first for fast-food tenderness"]],
   ing:[["Chicken breast","200 g"],["Coconut flour","21 g"],["Egg","1"],["Paprika","1 tsp"],["Garlic powder","1 tsp"],["Salt and pepper","to taste"]],
   steps:["Heat the oven to 200°C. Slice the chicken into finger-width strips.","Mix coconut flour with paprika, garlic powder, salt and pepper on a plate.","Dip each strip in beaten egg, then press firmly into the flour mix on all sides.","Lay on a lined tray, brush lightly with oil, and bake 20 minutes, turning once halfway.","Rest 3 minutes before eating so the crust sets."],
   swap:"Air fryer: 190°C for 12 minutes, shaking at 6."},
@@ -354,6 +394,7 @@ const RECIPES = [
  {id:5,art:"wrap",name:"Coconut flatbread wraps",tag:"Savory",tags:["Savory","Under 200","Batch prep"],time:"20 min",serves:3,
   blurb:"Soft enough to roll around anything. Makes 3 wraps.",
   k:65,p:5,c:7,f:2,keeps:"3 days in the fridge, wrapped",
+  boost:[["Xanthan gum","1 g","More stretch, fewer cracks when you roll them"],["Olive oil","5 g","Keeps them soft on day two"]],
   ing:[["Coconut flour","28 g"],["Egg whites","3"],["Greek yogurt (0%)","30 g"],["Warm water","60 ml"],["Salt","1/2 tsp"]],
   steps:["Mix everything into a soft dough, then rest 10 minutes — this step is what makes it rollable.","Split into 3 balls. Press each between two sheets of baking paper until thin.","Cook on a dry hot pan, 1 to 2 minutes a side, until spotted.","Stack them under a towel while warm so they stay flexible."],
   swap:"1 tsp psyllium husk in the dough makes them noticeably stretchier."},
@@ -361,6 +402,7 @@ const RECIPES = [
  {id:6,art:"pizza",name:"Personal pizza base",tag:"Savory",tags:["Savory","High protein"],time:"25 min",serves:1,
   blurb:"Base only — count your toppings on top of this.",
   k:300,p:22,c:16,f:14,
+  boost:[["MSG","1 g","In the dough — the savoury depth pizzerias get from long fermentation"],["Garlic powder","1/2 tsp","Goes in the dough, not on top"],["Olive oil","7 g","Brushed on the rim before the second bake, for a crisp edge"]],
   ing:[["Coconut flour","28 g"],["Eggs","2"],["Greek yogurt (0%)","60 g"],["Baking powder","1 tsp"],["Oregano","1 tsp"],["Salt","1/2 tsp"]],
   steps:["Heat the oven to 190°C. Mix everything to a thick, sticky dough and rest 5 minutes.","Spread it onto lined parchment with wet hands, about 5 mm thick — thinner than you think it should be.","Bake the naked base 12 minutes until dry and firm to the touch.","Add sauce and toppings, then bake 8 more minutes."],
   swap:"Blind-baking first is not optional. Toppings on raw dough leave it soggy in the middle."},
@@ -368,6 +410,7 @@ const RECIPES = [
  {id:7,art:"meatballs",name:"Lean meatballs",tag:"Savory",tags:["Savory","High protein","Batch prep"],time:"30 min",serves:3,
   blurb:"Coconut flour as binder instead of breadcrumbs — keeps them tender.",
   k:205,p:26,c:4,f:9,keeps:"4 days refrigerated",
+  boost:[["MSG","1 g","Depth without more salt"],["Baking soda","1/4 tsp","The restaurant trick — keeps lean mince tender instead of bouncy"],["Ice water","20 ml","Worked in at the end, for juicier meatballs"]],
   ing:[["Lean turkey or beef mince","300 g"],["Coconut flour","14 g"],["Egg","1"],["Onion, grated","1/2"],["Garlic, minced","2 cloves"],["Parsley, cumin, salt","to taste"]],
   steps:["Combine everything with your hands, then rest the mix 10 minutes so the flour absorbs the moisture.","Roll into 12 balls. Wet hands stop them sticking.","Bake at 200°C for 18 minutes, or brown in a pan and finish covered with a splash of water for 8 minutes.","Serve with the flatbread above or over salad."],
   swap:"Stick to 14 g. More coconut flour and they turn dry and crumbly."},
@@ -375,6 +418,7 @@ const RECIPES = [
  {id:8,art:"fritter",name:"Zucchini fritters",tag:"Savory",tags:["Savory","Under 200"],time:"20 min",serves:2,
   blurb:"Good use for the vegetable nobody plans a meal around.",
   k:140,p:9,c:11,f:7,
+  boost:[["MSG","0.8 g","Carries the vegetable further than salt alone"],["Baking powder","1/2 tsp","Lighter and less dense"],["Onion powder","1/2 tsp","Fills the gap fresh onion would leave watery"]],
   ing:[["Zucchini, grated","250 g"],["Coconut flour","21 g"],["Eggs","2"],["Spring onion","2"],["Cumin and chili","1/2 tsp each"],["Salt","1/2 tsp"]],
   steps:["Salt the grated zucchini and leave 10 minutes, then squeeze out as much water as you physically can. This decides whether they hold together.","Mix with eggs, coconut flour, spring onion and spices.","Spoon into a lightly oiled pan, flatten, and cook 3 minutes a side on medium.","Eat hot with garlic yogurt."],
   swap:"Same method works with grated carrot or cabbage."},
@@ -382,6 +426,7 @@ const RECIPES = [
  {id:9,art:"mugcake",name:"90-second mug cake",tag:"Dessert",tags:["Dessert","Under 200"],time:"3 min",serves:1,
   blurb:"The one that stops a late-night craving from ending the day badly.",
   k:170,p:11,c:12,f:8,
+  boost:[["Instant coffee","1/4 tsp","Deepens the cocoa without tasting of coffee"],["Salt","1 pinch","Chocolate needs it"],["Vanilla extract","1/2 tsp","Covers the eggy note microwaving can leave"]],
   ing:[["Coconut flour","14 g"],["Cocoa powder","5 g"],["Egg","1"],["Milk","60 ml"],["Baking powder","1/4 tsp"],["Stevia","to taste"]],
   steps:["Whisk everything directly in a wide mug until no lumps remain.","Microwave 60 seconds. Check the centre — give it 15 more seconds if it's still wet.","Stop the moment it's set. Overcooked coconut flour goes rubbery fast.","Eat straight from the mug."],
   swap:"5 g of peanut butter pressed into the middle before microwaving (+32 kcal)."},
@@ -389,6 +434,7 @@ const RECIPES = [
  {id:10,art:"brownie",name:"Fudgy brownie squares",tag:"Dessert",tags:["Dessert","Under 200","Batch prep"],time:"30 min",serves:9,
   blurb:"Yogurt does the work butter usually does. Makes 9 squares.",
   k:60,p:3,c:5,f:3,keeps:"5 days refrigerated",
+  boost:[["Instant espresso","1/2 tsp","The standard bakery move for chocolate"],["Salt","1/4 tsp","In the batter"],["Flaky salt","1 pinch","On top after baking, if you like the contrast"]],
   ing:[["Coconut flour","28 g"],["Cocoa powder","15 g"],["Eggs","2"],["Greek yogurt (0%)","100 g"],["Olive or coconut oil","14 g"],["Stevia","to taste"],["Vanilla","1 tsp"]],
   steps:["Heat the oven to 175°C and line a small square tin.","Whisk eggs, yogurt, oil, vanilla and stevia, then fold in coconut flour and cocoa.","Rest 5 minutes, then spread into the tin — the batter is thick, so push it flat.","Bake 18 to 20 minutes. Pull it while the centre still looks slightly underdone; it firms up as it cools.","Cool completely before cutting or it crumbles. Cut 3 by 3."],
   swap:"Chill them overnight. Cold makes them taste twice as fudgy."},
@@ -396,6 +442,7 @@ const RECIPES = [
  {id:11,art:"cookie",name:"Peanut butter cookies",tag:"Dessert",tags:["Dessert","Under 200","Batch prep"],time:"20 min",serves:8,
   blurb:"Chewy in the middle, four ingredients. Makes 8.",
   k:60,p:3,c:3,f:4,keeps:"5 days in a sealed jar",
+  boost:[["Salt","1/4 tsp","Peanut butter never comes salted enough for baking"],["Vanilla extract","1/2 tsp","Rounds the roast"],["Baking soda","1/8 tsp","A little spread and chew instead of sandy"]],
   ing:[["Coconut flour","21 g"],["Peanut butter","50 g"],["Egg","1"],["Milk","30 ml"],["Stevia","to taste"]],
   steps:["Heat the oven to 175°C.","Mix everything to a stiff dough. Add milk a teaspoon at a time only if it won't hold together.","Roll 8 balls, flatten with a fork in a criss-cross, and space them out on a lined tray.","Bake 10 to 12 minutes until the edges colour. They set as they cool — don't judge them hot."],
   swap:"Press half a square of dark chocolate into each before baking (+15 kcal each)."},
@@ -403,6 +450,7 @@ const RECIPES = [
  {id:12,art:"ball",name:"Lemon coconut bites",tag:"Dessert",tags:["Dessert","Under 200","No bake"],time:"15 min",serves:10,
   blurb:"No oven, sharp and fresh. Makes 10.",
   k:50,p:1,c:6,f:2,keeps:"5 days refrigerated",
+  boost:[["Salt","1 pinch","Makes the lemon read sharper"],["Citric acid","1/8 tsp","More sourness without more liquid loosening the dough"]],
   ing:[["Coconut flour","28 g"],["Desiccated coconut","20 g"],["Lemon zest","1 lemon"],["Lemon juice","30 ml"],["Honey","40 g"],["Greek yogurt (0%)","30 g"]],
   steps:["Mix everything into a dough that just holds when squeezed.","If it's too dry, add yogurt half a teaspoon at a time. If too wet, another spoon of coconut flour.","Roll 10 small balls and coat them in extra desiccated coconut.","Chill at least 30 minutes. They firm up properly in the fridge and keep 5 days."],
   swap:"Orange zest and a pinch of cardamom instead of lemon."},
@@ -410,6 +458,7 @@ const RECIPES = [
  {id:13,art:"patty",name:"Crispy tuna patties",tag:"Savory",tags:["Savory","High protein"],time:"15 min",serves:1,
   blurb:"Two patties, 38 g of protein, and no canned-tuna smell once they sear.",
   k:270,p:38,c:2,f:10,keeps:"3 to 4 days refrigerated",
+  boost:[["MSG","1 g","Standard in every commercial fish product"],["Onion powder","1/2 tsp","Won't wet the mix the way fresh onion does"],["Baking powder","1/4 tsp","A lighter patty instead of a dense puck"]],
   ing:[["Canned tuna, drained","130 g"],["Coconut flour","7 g"],["Egg","1"],["Lemon juice","1 tsp"],["Garlic powder","1/4 tsp"],["Black pepper","1/4 tsp"],["Salt","1 pinch"],["Olive oil or butter","1 tsp"]],
   steps:["Squeeze the excess liquid out of the tuna. Wet tuna will not crust.","Beat the egg with lemon juice, salt, pepper and garlic powder, then fold in the tuna and coconut flour.","Rest 2 minutes so the flour binds, then shape into 2 compact patties about 1.5 cm thick.","Skillet: 1 tsp oil on medium, sear undisturbed 3 to 4 minutes until deep golden, flip, 2 to 3 more. Air fryer: 190°C for 6 minutes, flip, 2 to 4 more.","Rest 2 minutes on a plate before eating so the structure sets."],
   swap:"Chili flakes, cumin or dried parsley all work in the mix."},
@@ -417,6 +466,7 @@ const RECIPES = [
  {id:14,art:"casserole",name:"Egg and veggie casserole",tag:"Savory",tags:["Savory","Breakfast","Under 200","Batch prep"],time:"40 min",serves:6,
   blurb:"Bread-pudding texture. The coconut flour is what stops it going watery in the fridge.",
   k:145,p:11,c:2.5,f:8.5,keeps:"5 to 7 days refrigerated",
+  boost:[["MSG","1.5 g","Egg bakes flatten out in the fridge — this is what holds them up"],["Mustard powder","1/2 tsp","Makes cheese taste more like cheese"],["Nutmeg","1 pinch","Classic in egg and cheese bakes"]],
   ing:[["Coconut flour","50 g"],["Eggs","7"],["Milk or water","100 ml"],["Baking powder","1/2 tsp"],["Cheese, shredded","60 g"],["Chopped vegetables","120 g"],["Salt","1/2 tsp"],["Black pepper","1/4 tsp"],["Oregano or garlic powder","1/2 tsp"]],
   steps:["Heat the oven to 180°C and lightly oil a 20x20 cm dish.","Whisk eggs, milk, seasoning and baking powder, then whisk in the coconut flour until completely lump-free.","Fold in the cheese and vegetables and pour into the dish.","Bake 28 to 32 minutes until the centre is set and the edges are golden.","Cool completely, then cut into 6 squares. Eat cold, 45 seconds in the microwave, or 3 minutes at 160°C in the air fryer."],
   swap:"Spinach, sautéed mushrooms, onion or bell pepper all work. Squeeze wet vegetables first."},
@@ -424,6 +474,7 @@ const RECIPES = [
  {id:15,art:"biscuit",name:"Cheddar herb biscuits",tag:"Savory",tags:["Savory","Breakfast","Under 200"],time:"15 min",serves:4,
   blurb:"Drop biscuits that stand in for a bread roll. Makes 4.",
   k:90,p:6,c:1.5,f:5.5,keeps:"4 to 5 days refrigerated",
+  boost:[["MSG","0.8 g","Savoury lift behind the cheese"],["Mustard powder","1/4 tsp","Sharpens mild cheese"],["Melted butter","10 g","Brushed on the moment they come out"]],
   ing:[["Coconut flour","35 g"],["Eggs","2"],["Grated cheese","30 g"],["Milk or water","15 ml"],["Baking powder","1/2 tsp"],["Oregano or thyme","1/4 tsp"],["Garlic powder","1/4 tsp"],["Salt and pepper","1 pinch"]],
   steps:["Beat the eggs with milk, garlic powder, herbs, salt and pepper. Stir in coconut flour and baking powder.","Fold in the cheese and rest 2 minutes until the dough thickens.","Form 4 round patties.","Air fry at 170°C for 8 to 10 minutes until golden on top.","Recrisp leftovers at 180°C for 2 minutes."],
   swap:"Cheddar, mozzarella or kashkaval all behave the same here."},
@@ -431,6 +482,7 @@ const RECIPES = [
  {id:16,art:"swirl",name:"Cinnamon swirl slice",tag:"Dessert",tags:["Dessert","Breakfast","Under 200","Batch prep"],time:"38 min",serves:8,
   blurb:"Sheet-pan cinnamon roll without the rolling. Makes 8 slices.",
   k:125,p:5,c:1.5,f:9,keeps:"up to 7 days refrigerated",
+  boost:[["Salt","1/4 tsp","The batter needs it or the cinnamon tastes dusty"],["Greek yogurt (0%)","30 g","Thin glaze over the cooled slice — the bakery finish, about 3 kcal a slice"]],
   ing:[["Coconut flour","75 g"],["Eggs","5"],["Stevia (batter)","3 tbsp"],["Melted butter (batter)","45 g"],["Milk or water","80 ml"],["Baking powder","1 tsp"],["Vanilla extract","1 tsp"],["Salt","1 pinch"],["Ground cinnamon (swirl)","2 tbsp"],["Melted butter (swirl)","25 g"],["Stevia (swirl)","2 tbsp"]],
   steps:["Heat the oven to 175°C and line a 20x20 cm pan.","Whisk eggs, melted butter, milk, stevia, vanilla and salt. Stir in coconut flour and baking powder.","Rest 3 minutes to thicken, then spread into the pan.","Stir the swirl cinnamon, butter and stevia into a paste. Dollop it across the batter and drag a knife through in a zig-zag.","Bake 25 to 28 minutes until the centre springs back. Cool completely, then cut 8 squares."],
   swap:"The swirl paste burns if it sits on top uncovered — drag it into the batter, don't leave it sitting on the surface."},
@@ -438,6 +490,7 @@ const RECIPES = [
  {id:17,art:"muffin",name:"Cinnamon vanilla muffins",tag:"Breakfast",tags:["Breakfast","Dessert","Under 200","Batch prep"],time:"22 min",serves:6,
   blurb:"The grab-one-and-leave breakfast. Makes 6.",
   k:110,p:6,c:2,f:7,keeps:"5 to 6 days refrigerated",
+  boost:[["Salt","1/4 tsp","Balances the stevia"],["Baking soda","1/8 tsp","Taller dome"],["Lemon zest","1/2 lemon","Lifts cinnamon bakes without tasting lemony"]],
   ing:[["Coconut flour","60 g"],["Eggs","4"],["Stevia","2 tbsp"],["Ground cinnamon","1 tsp"],["Baking powder","1 tsp"],["Milk or water","60 ml"],["Melted butter or oil","20 g"],["Vanilla extract","1/2 tsp"]],
   steps:["Whisk eggs, stevia, milk, melted butter and vanilla. Stir in coconut flour, baking powder and cinnamon.","Let it sit 3 minutes to thicken.","Spoon evenly into 6 lined muffin cups.","Bake at 175°C, oven or air fryer, for 15 to 18 minutes until a toothpick comes out clean.","Reheat 2 to 3 minutes at 160°C, or eat them cold from the fridge."],
   swap:"Half a grated apple folded in adds moisture for about 5 kcal a muffin."},
@@ -445,6 +498,7 @@ const RECIPES = [
  {id:18,art:"scone",name:"Cinnamon yogurt scones",tag:"Breakfast",tags:["Breakfast","Dessert","Under 200"],time:"15 min",serves:4,
   blurb:"Dense and biscuit-like, crisp outside. Makes 4.",
   k:95,p:6,c:2,f:4,keeps:"4 to 5 days refrigerated",
+  boost:[["Cold butter","15 g","Rubbed in cold, not melted — this is the whole difference between a scone and a cake"],["Milk","1 tbsp","Brushed on top for the golden bakery colour"]],
   ing:[["Coconut flour","50 g"],["Eggs","2"],["Thick yogurt or labneh","60 g"],["Stevia","2 tbsp"],["Baking powder","1/2 tsp"],["Ground cinnamon","1/2 tsp"],["Salt","1 pinch"]],
   steps:["Whisk yogurt, eggs and stevia, then fold in coconut flour, baking powder, cinnamon and salt.","Rest 2 minutes until it forms a firm dough.","Shape 4 rounds or triangles about 1.5 to 2 cm thick.","Air fry at 170°C for 8 to 10 minutes until crisp and golden.","Restore the crunch later at 180°C for 2 minutes."],
   swap:"Thin yogurt makes a sticky dough. Strain it first or add a spoon more coconut flour."},
@@ -452,6 +506,7 @@ const RECIPES = [
  {id:19,art:"loaf",name:"Spiced coffee-cake loaf",tag:"Breakfast",tags:["Breakfast","Dessert","Under 200","Batch prep"],time:"50 min",serves:8,
   blurb:"One bake, a week of breakfasts. Makes 8 slices.",
   k:140,p:6,c:2,f:10,keeps:"up to 7 days refrigerated",
+  boost:[["Instant espresso","1 tsp","The thing that earns it the name"],["Greek yogurt (0%)","30 g","Moisture that survives the whole week"]],
   ing:[["Coconut flour","90 g"],["Eggs","6"],["Stevia","4 tbsp"],["Melted butter or coconut oil","60 g"],["Milk or water","80 ml"],["Baking powder","1 tsp"],["Ground cinnamon","1.5 tsp"],["Vanilla, nutmeg or clove","1/2 tsp"],["Salt","1 pinch"]],
   steps:["Heat the oven to 175°C and line a loaf pan.","Whisk eggs, butter, milk, stevia and vanilla until frothy — the froth is what keeps it light.","Whisk in coconut flour, baking powder, cinnamon and salt, then rest 5 minutes until thick.","Smooth into the pan and bake 35 to 40 minutes until a skewer comes out dry.","Cool completely before slicing into 8."],
   swap:"Wrap slices individually and freeze half. They thaw in an hour."},
@@ -459,6 +514,7 @@ const RECIPES = [
  {id:20,art:"ramekin",name:"Cinnamon ramekin cake",tag:"Dessert",tags:["Dessert","Under 200"],time:"15 min",serves:1,
   blurb:"Made in the ramekin, eaten from the ramekin. One dish total.",
   k:135,p:6.5,c:2.5,f:9,
+  boost:[["Salt","1 pinch","Small bakes need it most"],["Vanilla extract","1/2 tsp","Covers any eggy edge"]],
   ing:[["Coconut flour","7 g"],["Egg","1"],["Milk or water","15 ml"],["Melted butter or oil","7 g"],["Stevia","3 tsp"],["Ground cinnamon","1 tsp"],["Baking powder","1/8 tsp"],["Salt","1 pinch"]],
   steps:["Rub the inside of an oven-safe ramekin with butter.","Whisk the egg, butter, milk, stevia, cinnamon and salt right in the ramekin.","Stir in coconut flour and baking powder, then let it sit 2 minutes.","Air fryer 165°C for 10 to 12 minutes, or oven 180°C for 15 to 18.","Eat warm, or chill it overnight and eat it cold."],
   swap:"A tablespoon of finely diced apple, or a pinch of cardamom or ginger."},
@@ -466,6 +522,7 @@ const RECIPES = [
  {id:21,art:"cookie",name:"Snickerdoodle cookies",tag:"Dessert",tags:["Dessert","Under 200","Batch prep"],time:"25 min",serves:10,
   blurb:"Crumbly, cinnamon-dusted, 75 kcal each. Makes 10.",
   k:75,p:2.5,c:1,f:5.5,keeps:"5 to 7 days in a sealed jar",
+  boost:[["Cream of tartar","1/2 tsp","The actual reason a snickerdoodle tastes like a snickerdoodle, not a sugar cookie"],["Vanilla extract","1/2 tsp","Rounds the cinnamon"]],
   ing:[["Coconut flour","60 g"],["Eggs","2"],["Softened butter","40 g"],["Stevia (dough)","3 tbsp"],["Ground cinnamon (dough)","1.5 tsp"],["Baking powder","1/2 tsp"],["Salt","1 pinch"],["Cinnamon + stevia (dusting)","1 tsp each"]],
   steps:["Heat the oven to 175°C and line a tray.","Mash the soft butter with the stevia, beat in the eggs, then add coconut flour, cinnamon, baking powder and salt. Knead to a firm ball and rest 3 minutes.","Roll 10 balls, flatten with your palm or a fork.","Dust the tops generously with the cinnamon-stevia mix.","Bake 14 to 17 minutes until the edges firm up. Cool completely on the tray — they harden as they cool."],
   swap:"20 g of crushed walnuts in the dough adds about 14 kcal a cookie."},
@@ -473,6 +530,7 @@ const RECIPES = [
  {id:22,art:"biscotti",name:"Americano biscotti",tag:"Dessert",tags:["Dessert","Coffee dipper","Batch prep"],time:"35 min",serves:4,
   blurb:"Double-baked for dipping in black coffee. Makes 8 fingers; a serving is 2.",
   k:110,p:5,c:1.5,f:7,keeps:"2 to 3 weeks in a sealed jar at room temperature",
+  boost:[["Almond extract","1/4 tsp","The traditional biscotti note"],["Sesame seeds","10 g","Pressed on the log before the first bake"]],
   ing:[["Coconut flour","45 g"],["Eggs","2"],["Stevia","2 tbsp"],["Melted butter or coconut oil","15 g"],["Baking powder","1/2 tsp"],["Cinnamon or instant espresso","1/2 tsp"],["Salt","1 pinch"]],
   steps:["Whisk eggs, butter and stevia. Stir in coconut flour, baking powder, salt and cinnamon, then rest 3 minutes.","Shape into a flat log on parchment, about 2 cm thick and 6 to 7 cm wide.","First bake at 175°C for 15 minutes until set. Cool 10 minutes.","Slice diagonally into 1.5 cm fingers and lay them flat.","Second bake at 150°C for 6 to 8 minutes a side until completely dry. They are supposed to be hard — that's what makes them dip well."],
   swap:"Espresso powder instead of cinnamon makes them taste like the coffee they go in."},
@@ -480,6 +538,7 @@ const RECIPES = [
  {id:23,art:"rusk",name:"Cardamom coffee rusks",tag:"Dessert",tags:["Dessert","Coffee dipper","Batch prep"],time:"55 min",serves:6,
   blurb:"Peksimet style. Rock hard in the jar, soft the second they hit coffee. Makes 12 to 14.",
   k:105,p:4,c:1.5,f:7.5,keeps:"3+ weeks in a sealed jar at room temperature",
+  boost:[["Sesame seeds","15 g","Pressed on top before baking, the way bakeries here do"],["Mahlab","1/2 tsp","The regional bakery note, alongside the cardamom"]],
   ing:[["Coconut flour","80 g"],["Eggs","3"],["Stevia","3 tbsp"],["Melted butter or ghee","45 g"],["Baking powder","1/2 tsp"],["Ground cardamom or anise","1 tsp"],["Milk or water","30–40 ml"],["Salt","1 pinch"]],
   steps:["Whisk eggs, butter, stevia and cardamom. Add coconut flour, baking powder and salt, then knead to a firm ball, adding milk in small splashes if it's too dry.","Press flat into a rectangle about 1.5 cm thick on a lined tray. Bake at 170°C for 18 to 20 minutes, then cool 15 minutes.","Slice into finger-sized rusks with a serrated knife.","Drop the oven to 130°C and dry them out for 25 to 30 minutes, spaced apart, until fully crisp.","Cool completely before jarring, or trapped steam will soften them."],
   swap:"No power? These are the ones to make ahead. They keep for weeks with no fridge."},
@@ -487,6 +546,7 @@ const RECIPES = [
  {id:24,art:"ball",name:"No-bake peanut butter bites",tag:"Dessert",tags:["Dessert","No bake","Under 200","Batch prep"],time:"5 min",serves:4,
   blurb:"No heat, no oven, cookie-dough texture. Makes 8 to 10; a serving is 2.",
   k:115,p:4.5,c:2,f:8,keeps:"2 weeks refrigerated, 2 months frozen",
+  boost:[["Salt","1 pinch","Peanut butter is never salted enough on its own"],["Instant coffee","1/4 tsp","Makes them taste like they have chocolate in them"]],
   ing:[["Coconut flour","40 g"],["Smooth peanut butter","50 g"],["Stevia","2 tbsp"],["Water or milk","30–45 ml"],["Salt","1 pinch"]],
   steps:["Soften the peanut butter slightly and stir in the stevia and salt.","Stir in the coconut flour, then add liquid a tablespoon at a time, kneading by hand until the dough is smooth and pliable.","Roll 8 to 10 bite-sized balls.","Store cold and take 2 straight from the fridge with hot coffee."],
   swap:"Dust them in cinnamon or unsweetened cocoa before chilling."},
@@ -635,7 +695,12 @@ ui:{
  ingredients:"المكوّنات",
  boostTitle:"ليصير بطعم المطاعم",
  boostCap:"كلها اختيارية. زِنها — الغلوتامات تحتاج 0.3 إلى 0.5% من وزن الصلصة، وفوق 1% تقريباً يصير الطعم معدنياً. ذوّب المساحيق في الخل أو عصير الليمون قبل الخلط.",
+  boostCapPlain:"كلها اختيارية. هذه الأشياء الصغيرة هي الفرق بين مخبوز بيتي ومخبوز مخبز — أضف واحداً في كل مرة لتعرف ماذا يفعل كل منها.",
  method:"الطريقة",
+ cook:"وضع الطبخ", cookPrep:"التحضير", cookStep:"خطوة {a} من {b}", cookDone:"تم!",
+ cookNext:"التالي", cookPrev:"السابق", cookFinish:"إنهاء", cookExit:"خروج",
+ cookStart:"ابدأ {n}", cookStop:"إيقاف", cookTimerDone:"انتهى الوقت",
+ cookGather:"اجمع كل شيء قبل أن تبدأ",
  addToday:"أضف {n} سعرة لليوم", removeToday:"احذف من اليوم",
  editRecipe:"تعديل الوصفة", del:"حذف",
  confirmDel:"حذف {n}؟ لا يمكن التراجع.",
@@ -689,7 +754,11 @@ ing:{
 "Vanilla":"فانيلا","Vanilla extract":"خلاصة فانيلا","Vanilla, nutmeg or clove":"فانيلا أو جوزة الطيب أو قرنفل","Warm water":"ماء دافئ",
 "Water or milk":"ماء أو حليب","White vinegar":"خل أبيض","Worcestershire sauce":"صلصة ورسيستر","Yellow mustard":"خردل أصفر","Zucchini, grated":"كوسا مبشورة",
 "MSG":"غلوتامات أحادية الصوديوم (أجينوموتو)","Citric acid":"حامض الستريك (ملح ليمون)","Pickle brine":"ماء المخلل",
-"Xanthan gum":"صمغ زانثان","Liquid smoke":"دخان سائل"
+"Xanthan gum":"صمغ زانثان","Liquid smoke":"دخان سائل",
+"Baking soda":"بيكربونات الصوديوم","Melted butter":"زبدة مذابة","Instant coffee":"قهوة سريعة الذوبان",
+"Instant espresso":"إسبريسو سريع الذوبان","Flaky salt":"ملح خشن","Mustard powder":"خردل بودرة",
+"Nutmeg":"جوزة الطيب","Cold butter":"زبدة باردة","Cream of tartar":"كريم التارتار",
+"Almond extract":"خلاصة اللوز","Sesame seeds":"سمسم","Mahlab":"محلب"
 },
 keeps:{
 "1 week refrigerated":"أسبوع في الثلاجة",
@@ -922,6 +991,30 @@ r:{
  w:"صفِّ اللبن في قماشة ساعة أولاً فتصير غموساً ثخيناً بدل صلصة."}
 },
 bw:{
+1:["يجعلها تبدو أحلى دون زيادة المحلّي","البان كيك بلا ملح يكون طعمه باهتاً ولا أحد يعرف السبب","يحمّرها أسرع، فتأخذ لونها قبل أن يجف داخلها"],
+2:["الشوربة بلا ملح طعمها كالعجين","تُدوّر طعم الحليب","تبقى كريمية بدل أن تنفصل وهي تبرد"],
+3:["حتى في النسخة الحلوة","في الخليط لا في المقلاة — هكذا تحصل الكريبيريهات على الأطراف المخرّمة"],
+4:["يُخلط مع خليط الطحين لا مع الدجاج","في خليط الطحين — يرفع القاعدية فتصير القشرة أقرمش بوضوح","انقع الأصابع فيه 30 دقيقة أولاً لطراوة المطاعم"],
+5:["مطاطية أكثر وتشقّقات أقل عند اللف","تبقيها طرية في اليوم التالي"],
+6:["في العجين — العمق المالح الذي تحصل عليه المطاعم من التخمير الطويل","يوضع في العجين لا فوقه","يُدهن على الحافة قبل الخبزة الثانية لحافة مقرمشة"],
+7:["عمق بلا ملح إضافي","حيلة المطاعم — تبقي اللحم القليل الدهن طرياً بدل أن يصير مطاطياً","يُعجن في النهاية لكرات أكثر عصارة"],
+8:["يحمل طعم الخضار أبعد من الملح وحده","أخف وأقل كثافة","يسدّ الفراغ الذي يتركه البصل الطازج المائي"],
+9:["تعمّق الكاكاو دون أن يصير الطعم قهوة","الشوكولاتة تحتاجه","يغطّي طعم البيض الذي يتركه المايكرويف أحياناً"],
+10:["الحركة المعتادة في المخابز مع الشوكولاتة","في الخليط","فوقه بعد الخبز، إن أحببت التباين"],
+11:["زبدة الفول السوداني لا تأتي مملّحة بما يكفي للخبز","تُدوّر طعم التحميص","انتشار وطراوة بدل قوام رملي"],
+12:["يجعل الليمون يبدو أحدّ","حموضة أكثر دون سائل يفكّك العجينة"],
+13:["موجود في كل منتج سمك تجاري","لا يبلّل الخليط كما يفعل البصل الطازج","قرص أخف بدل قرص كثيف"],
+14:["البيض المخبوز يفقد طعمه في الثلاجة — هذا ما يحافظ عليه","تجعل الجبن يبدو أكثر جبناً","كلاسيكي في مخبوزات البيض والجبن"],
+15:["رفعة مالحة خلف طعم الجبن","تحدّ الجبن الخفيف","تُدهن فوقها لحظة خروجها"],
+16:["الخليط يحتاجه وإلا صار طعم القرفة ترابياً","تزجيج رقيق فوق القطعة الباردة — لمسة المخابز، بنحو 3 سعرات للقطعة"],
+17:["يوازن الستيفيا","قبة أعلى","ترفع مخبوزات القرفة دون أن يصير طعمها ليموناً"],
+18:["تُفرك باردة لا مذابة — هذا هو الفرق كله بين السكونز والكيك","يُدهن فوقها للون المخابز الذهبي"],
+19:["ما يستحق به الاسم","رطوبة تصمد الأسبوع كله"],
+20:["المخبوزات الصغيرة أحوج ما تكون إليه","تغطّي أي طعم بيض"],
+21:["السبب الحقيقي لأن طعم السنيكردودل سنيكردودل لا كوكيز سكر عادي","تُدوّر القرفة"],
+22:["نكهة البسكوتي التقليدية","تُضغط على القالب قبل الخبزة الأولى"],
+23:["يُضغط فوقها قبل الخبز، كما تفعل المخابز هنا","نكهة المخابز المحلية، إلى جانب الهيل"],
+24:["زبدة الفول السوداني وحدها ليست مملّحة بما يكفي","تجعل طعمها وكأن فيها شوكولاتة"],
 25:["يهذّب حدّة الثوم النيء دون أن يخفي الثوم نفسه","يحدّها دون إضافة سائل يفكّك الخليط"],
 26:["الشيء الوحيد الذي ينقص معظم النسخ البيتية","الحموضة التي في نسخة المطاعم ولا يعطيها الخل وحده","بودرة بدل البصل الطازج — لا تتخمّر ولا تمرّ في الثلاجة"],
 27:["عمق خلف طعم المخلل","ينعشها دون أن يخففها","يمنعها من تسييل الخبز"],
@@ -1205,19 +1298,23 @@ function paintSheet(){
     '<ul class="ings">'+r.ing.map(i=>'<li><span>'+esc(i[0])+'</span><i>'+esc(tAmount(scale(i[1],n)))+'</i></li>').join("")+'</ul>'+
     (r.boost && r.boost.length ?
       '<h3>'+t("boostTitle","Make it taste commercial")+'</h3>'+
-      '<p class="optcap">'+t("boostCap","All optional. Weigh them — MSG wants 0.3 to 0.5% of the sauce\'s weight, and past about 1% it turns metallic. Dissolve powders in the vinegar or juice before mixing.")+'</p>'+
+      '<p class="optcap">'+(r.boost.some(b => /MSG|غلوتامات/.test(b[0]))
+        ? t("boostCap","All optional. Weigh them — MSG wants 0.3 to 0.5% of the sauce\'s weight, and past about 1% it turns metallic. Dissolve powders in the vinegar or juice before mixing.")
+        : t("boostCapPlain","All optional. These are the small things between a home bake and a bakery one — add one at a time so you can taste what each does."))+'</p>'+
       '<ul class="ings opt">'+r.boost.map(b=>'<li><span>'+esc(b[0])+(b[2]?'<em>'+esc(b[2])+'</em>':'')+'</span><i>'+esc(tAmount(scale(b[1],n)))+'</i></li>').join("")+'</ul>'
       : '')+
     '<h3>'+t("method","Method")+'</h3>'+
     '<ol class="steps">'+r.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol>'+
     (r.swap ? '<div class="swap">'+esc(r.swap)+'</div>' : '<div style="height:22px"></div>')+
     '<button class="sheet-add" id="sAdd"></button>'+
+    '<button class="sheet-add" id="sCook" style="background:transparent;border:1px solid var(--mint);color:var(--mint);margin:-30px 0 12px">'+t("cook","Cooking mode")+'</button>'+
     '<div class="shareRow"><button id="sImg">'+t("shareCard","Share card")+'</button><button id="sTxt">'+t("shareText","Share as text")+'</button></div>'+
     (r.custom ? '<div class="btnrow" style="margin:0 0 44px"><button class="ghost" id="sEdit">'+t("editRecipe","Edit recipe")+'</button><button class="ghost danger" id="sDel">'+t("del","Delete")+'</button></div>' : '<div style="height:30px"></div>');
   const inc = (r.serves || 1) >= 12 ? Math.ceil(r.serves / 2) : 1;
   $("#minus").onclick = () => { if(sheetServes - inc >= inc){ sheetServes -= inc; paintSheet(); } };
   $("#plus").onclick  = () => { if(sheetServes + inc <= (r.serves || 1) * 4){ sheetServes += inc; paintSheet(); } };
   $("#sAdd").onclick  = () => toggle(r.id);
+  $("#sCook").onclick = () => openCook(current, n);
   $("#sImg").onclick  = () => shareCard(r);
   $("#sTxt").onclick  = () => shareText(r);
   if(r.custom){
@@ -1456,7 +1553,8 @@ $("#impFile").addEventListener("change", e => {
 
 document.addEventListener("keydown", e => {
   if(e.key !== "Escape") return;
-  if(editing) closeForm(); else if(current) closeSheet();
+  if($("#cook").classList.contains("open")) closeCook();
+  else if(editing) closeForm(); else if(current) closeSheet();
 });
 
 
@@ -1530,6 +1628,121 @@ if("serviceWorker" in navigator && !isFile){
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
 }
 
+
+
+/* ---------- cooking mode ---------- */
+let cookScreens = [], cookAt = 0, cookWake = null, timerId = null, timerLeft = 0, timerTotal = 0;
+
+/* pull a duration out of a step, in either language */
+function stepSeconds(text){
+  const s2 = String(text);
+  const en = s2.match(/(\d+)(?:\s*(?:to|–|-)\s*\d+)?\s*(seconds?|secs?|minutes?|mins?|hours?)/i);
+  if(en){
+    const n = parseInt(en[1], 10), u = en[2].toLowerCase();
+    if(u[0] === "s") return n;
+    if(u[0] === "h") return n * 3600;
+    return n * 60;
+  }
+  const ar = s2.match(/(\d+)(?:\s*(?:إلى|-|–)\s*\d+)?\s*(ثانية|ثواني|دقيقة|دقائق|ساعة|ساعات)/);
+  if(ar){
+    const n = parseInt(ar[1], 10), u = ar[2];
+    if(u.indexOf("ثان") === 0 || u.indexOf("ثوا") === 0) return n;
+    if(u.indexOf("ساع") === 0) return n * 3600;
+    return n * 60;
+  }
+  return 0;
+}
+const mmss = s2 => Math.floor(s2/60) + ":" + String(s2 % 60).padStart(2, "0");
+
+function openCook(raw, n){
+  const r = L(raw);
+  cookScreens = [{prep:true, ing:r.ing.map(i => [i[0], tAmount(scale(i[1], n || 1))])}]
+    .concat(r.steps.map((st, i) => ({n:i+1, text:st, secs:stepSeconds(st)})));
+  cookAt = 0;
+  $("#cook").classList.add("open");
+  document.body.style.overflow = "hidden";
+  paintCook();
+  requestWake();
+}
+function closeCook(){
+  stopTimer();
+  $("#cook").classList.remove("open");
+  document.body.style.overflow = current ? "hidden" : "";
+  releaseWake();
+}
+function paintCook(){
+  stopTimer();
+  const sc = cookScreens[cookAt], total = cookScreens.length - 1;
+  $("#cookFill").style.width = (cookAt / total * 100) + "%";
+  $("#cookCount").textContent = sc.prep ? t("cookPrep","Prep")
+    : t("cookStep","Step {a} of {b}", {a:sc.n, b:total});
+  $("#cookBody").innerHTML = sc.prep
+    ? '<p class="cook-title">'+t("ingredients","Ingredients")+'</p>'+
+      '<ul class="cook-list">'+sc.ing.map(i=>'<li><span>'+esc(i[0])+'</span><i>'+esc(i[1])+'</i></li>').join("")+'</ul>'+
+      '<p class="cook-hint">'+t("cookGather","Get everything out before you start")+'</p>'
+    : '<p class="cook-step">'+esc(sc.text)+'</p>'+
+      (sc.secs ? '<div class="timer"><button id="timerBtn">'+t("cookStart","Start {n}", {n:mmss(sc.secs)})+'</button></div>' : '');
+  if(sc.secs) $("#timerBtn").onclick = () => timerId ? stopTimer(true) : startTimer(sc.secs);
+  $("#cookPrev").textContent = t("cookPrev","Back");
+  $("#cookPrev").disabled = cookAt === 0;
+  $("#cookNext").textContent = cookAt === cookScreens.length - 1 ? t("cookFinish","Finish") : t("cookNext","Next");
+  $("#cookBody").scrollTop = 0;
+}
+function cookGo(d){
+  if(d > 0 && cookAt === cookScreens.length - 1){ closeCook(); toast(t("cookDone","Done!")); return; }
+  cookAt = Math.max(0, Math.min(cookScreens.length - 1, cookAt + d));
+  paintCook();
+}
+$("#cookNext").addEventListener("click", () => cookGo(1));
+$("#cookPrev").addEventListener("click", () => cookGo(-1));
+$("#cookExit").addEventListener("click", closeCook);
+
+function startTimer(secs){
+  timerTotal = secs; timerLeft = secs;
+  const btn = $("#timerBtn"); if(!btn) return;
+  btn.classList.add("running");
+  btn.textContent = mmss(timerLeft);
+  timerId = setInterval(() => {
+    timerLeft--;
+    const b = $("#timerBtn"); if(!b){ stopTimer(); return; }
+    b.textContent = timerLeft > 0 ? mmss(timerLeft) : t("cookTimerDone","Time's up");
+    if(timerLeft <= 0){ stopTimer(); alertDone(); }
+  }, 1000);
+}
+function stopTimer(reset){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+  const b = $("#timerBtn");
+  if(b && reset){ b.classList.remove("running"); b.textContent = t("cookStart","Start {n}", {n:mmss(timerTotal)}); }
+}
+function alertDone(){
+  try { if(navigator.vibrate) navigator.vibrate([260, 120, 260]); } catch(e){}
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
+    const ac = new AC();
+    [0, 0.35, 0.7].forEach(off => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.value = 880; o.connect(g); g.connect(ac.destination);
+      g.gain.setValueAtTime(0.0001, ac.currentTime + off);
+      g.gain.exponentialRampToValueAtTime(0.25, ac.currentTime + off + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + off + 0.25);
+      o.start(ac.currentTime + off); o.stop(ac.currentTime + off + 0.28);
+    });
+    setTimeout(() => { try { ac.close(); } catch(e){} }, 1500);
+  } catch(e){}
+  toast(t("cookTimerDone","Time's up"));
+}
+async function requestWake(){
+  try { if("wakeLock" in navigator) cookWake = await navigator.wakeLock.request("screen"); } catch(e){}
+}
+function releaseWake(){ try { if(cookWake){ cookWake.release(); cookWake = null; } } catch(e){} }
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "visible" && $("#cook").classList.contains("open") && !cookWake) requestWake();
+});
+document.addEventListener("keydown", e => {
+  if(!$("#cook").classList.contains("open")) return;
+  if(e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " ") { e.preventDefault(); cookGo(isAR() ? -1 : 1); }
+  if(e.key === "ArrowLeft"  || e.key === "ArrowUp") { e.preventDefault(); cookGo(isAR() ? 1 : -1); }
+});
 
 /* ---------- share: a printable card image, or clean text ---------- */
 const CC = {bg:"#0F2E24", panel:"#0A211A", line:"#1E4739", cream:"#F4EFE2", dim:"#A9B8AE", toast:"#E8A33D", mint:"#7FC9A8", char:"#12241D"};
