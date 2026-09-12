@@ -32,6 +32,18 @@ it can't install from a file. You need a URL.
 Netlify Drop (drag the folder onto netlify.com/drop) and Cloudflare Pages both
 work the same way if you'd rather not use GitHub.
 
+## Features
+
+- **Two languages.** The button at the top right switches between English and
+  Arabic. Arabic is a real translation of every recipe, not machine output, and
+  the whole layout flips to RTL. Your choice is remembered.
+- **Bilingual recipes of your own.** The editor has English and العربية tabs.
+  Numbers, picture and category are shared; name, ingredients and method are
+  stored per language. Fill one side only and it shows in both.
+- **Share any recipe.** Open a recipe and use *Share card* for a PNG recipe card
+  (it goes straight into WhatsApp on Android via the native share sheet) or
+  *Share as text* for plain text you can paste anywhere.
+
 ## After installing
 
 - It opens full screen with no address bar, like a normal app.

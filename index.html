@@ -14,7 +14,7 @@
 <meta name="description" content="Coconut-flour recipes counted for a calorie-deficit day.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --palm:#0F2E24; --palm-deep:#0A211A; --palm-line:#1E4739;
@@ -33,7 +33,7 @@
   .gauge-top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
   .kcal{font-family:Fraunces,Georgia,serif;font-size:40px;font-weight:800;line-height:.9;letter-spacing:-.02em;color:var(--toast);font-variant-numeric:tabular-nums}
   .kcal small{font-size:15px;font-weight:600;color:var(--cream-dim);margin-left:6px;letter-spacing:0}
-  .gauge-note{font-size:12.5px;color:var(--cream-dim);text-align:right;max-width:46%}
+  .gauge-note{font-size:12.5px;color:var(--cream-dim);text-align:end;max-width:46%}
   .bars{margin-top:12px;display:grid;gap:7px}
   .bar{height:7px;border-radius:99px;background:#173A2E;overflow:hidden}
   .bar span{display:block;height:100%;border-radius:99px;transition:width .35s cubic-bezier(.2,.7,.3,1)}
@@ -42,7 +42,7 @@
   .clearday{background:none;border:none;color:var(--cream-dim);font:inherit;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:0;cursor:pointer}
   .clearday[hidden]{display:none}
 
-  .mast{padding:30px 0 18px}
+  .mast{padding:30px 0 18px;position:relative}
   .mast h1{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:clamp(34px,10vw,46px);line-height:.95;letter-spacing:-.025em;margin:0}
   .mast p{margin:10px 0 0;color:var(--cream-dim);font-size:14.5px;max-width:34em}
 
@@ -65,7 +65,7 @@
   .row-meta{display:block;font-size:12.5px;color:var(--cream-dim);margin-top:2px}
   .row-k{font-family:Fraunces,Georgia,serif;font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;flex:0 0 auto}
   .row-k i{font-style:normal;font-size:11px;color:var(--cream-dim);font-family:Inter,sans-serif;margin-left:3px}
-  .add{flex:0 0 46px;background:none;border:none;border-left:1px solid var(--palm-line);color:var(--mint);font-size:24px;line-height:1;cursor:pointer}
+  .add{flex:0 0 46px;background:none;border:none;border-inline-start:1px solid var(--palm-line);color:var(--mint);font-size:24px;line-height:1;cursor:pointer}
   .add.on{color:var(--char);background:var(--mint);font-weight:700}
   .empty{padding:40px 0;color:var(--cream-dim);font-size:14.5px}
 
@@ -100,10 +100,15 @@
   .catrow input{flex:1;min-width:0;background:var(--palm-deep);border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:11px 12px;font:inherit;font-size:15px}
   .catrow input:focus{outline:2px solid var(--toast);outline-offset:1px}
   .cattags{display:flex;flex-wrap:wrap;gap:8px}
-  .cattag{display:inline-flex;align-items:center;gap:8px;background:var(--palm-deep);border:1px solid var(--palm-line);border-radius:99px;padding:6px 8px 6px 14px;font-size:13.5px}
+  .cattag{display:inline-flex;align-items:center;gap:8px;background:var(--palm-deep);border:1px solid var(--palm-line);border-radius:99px;padding-block:6px;padding-inline:14px 8px;font-size:13.5px}
   .cattag button{background:none;border:none;color:var(--cream-dim);font:inherit;font-size:17px;line-height:1;cursor:pointer;padding:0 4px}
   .cattag button:hover{color:#E8956B}
   .cattag.builtin{color:var(--cream-dim);padding:6px 14px}
+  .tabs{display:flex;gap:0;background:var(--palm-deep);border:1px solid var(--palm-line);border-radius:12px;padding:4px;margin:6px 0 8px}
+  .tab{flex:1;background:none;border:none;color:var(--cream-dim);font:inherit;font-size:14.5px;padding:10px 8px;border-radius:9px;cursor:pointer}
+  .tab[aria-pressed="true"]{background:var(--cream);color:var(--char);font-weight:700}
+  .seclabel{font-family:Inter,sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em;color:var(--cream-dim);margin:26px 0 10px;text-transform:uppercase}
+  html[dir="rtl"] .seclabel{font-family:Cairo,sans-serif;letter-spacing:0}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap}
   .ghost{background:transparent;border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:10px 14px;font:inherit;font-size:14px;cursor:pointer}
   .ghost:hover{border-color:var(--cream-dim)}
@@ -119,6 +124,19 @@
   .artbtn[aria-pressed="true"]{border-color:var(--mint);background:#12332A}
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--cream);color:var(--char);padding:11px 18px;border-radius:99px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:90}
   .toast.show{opacity:1;transform:translateX(-50%)}
+  .langbtn{position:absolute;top:30px;inset-inline-end:0;background:transparent;border:1px solid var(--palm-line);color:var(--cream);border-radius:99px;padding:7px 15px;font-size:13.5px;font-family:Cairo,Inter,sans-serif;cursor:pointer}
+  .langbtn:hover{border-color:var(--cream-dim)}
+  .shareRow{display:flex;gap:10px;margin:-30px 0 14px}
+  .shareRow button{flex:1;background:transparent;border:1px solid var(--palm-line);color:var(--cream);border-radius:10px;padding:12px 10px;font:inherit;font-size:14px;cursor:pointer}
+  .shareRow button:hover{border-color:var(--mint);color:var(--mint)}
+  html[dir="rtl"] body{font-family:Cairo,"Segoe UI",Tahoma,sans-serif}
+  html[dir="rtl"] .mast h1,html[dir="rtl"] .sheet h2,html[dir="rtl"] .notes h2,html[dir="rtl"] .panel h2{font-family:Cairo,sans-serif;font-weight:800;letter-spacing:0}
+  html[dir="rtl"] .kcal,html[dir="rtl"] .row-k,html[dir="rtl"] .macro b,html[dir="rtl"] .servnum{font-family:Cairo,sans-serif;font-weight:800}
+  html[dir="rtl"] .notes li::before{font-family:Cairo,sans-serif}
+  html[dir="rtl"] .steps li::marker{font-family:Cairo,sans-serif}
+  html[dir="rtl"] .mast h1{font-size:clamp(30px,8.5vw,40px);line-height:1.25}
+  html[dir="rtl"] .mast{padding-top:36px}
+  html[dir="rtl"] .langbtn{font-family:Inter,sans-serif}
   footer{color:var(--cream-dim);font-size:12.5px;padding:0 0 40px;line-height:1.6}
 
   .sheet{position:fixed;inset:0;z-index:60;background:var(--palm);overflow-y:auto;overscroll-behavior:contain;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.7,.3,1);visibility:hidden}
@@ -142,15 +160,15 @@
   .sheet h3{font-family:Inter,sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--mint);margin:28px 0 10px}
   .ings{list-style:none;margin:0;padding:0}
   .ings li{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px dashed var(--palm-line);font-size:15px}
-  .ings li i{font-style:normal;color:var(--toast);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+  .ings li i{font-style:normal;color:var(--toast);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:end}
   .optcap{font-size:13px;color:var(--cream-dim);margin:-2px 0 8px;line-height:1.55}
   .ings.opt li{border-bottom-color:#1A3B2F;align-items:flex-start}
   .ings.opt li i{color:var(--mint)}
   .ings.opt em{display:block;font-style:normal;font-size:12.5px;color:var(--cream-dim);margin-top:3px;line-height:1.45}
-  .steps{margin:0;padding-left:1.15em;font-size:15px;line-height:1.65}
-  .steps li{margin-bottom:12px;padding-left:4px}
+  .steps{margin:0;padding-inline-start:1.15em;font-size:15px;line-height:1.65}
+  .steps li{margin-bottom:12px;padding-inline-start:4px}
   .steps li::marker{color:var(--toast);font-family:Fraunces,serif}
-  .swap{background:var(--palm-deep);border-left:2px solid var(--toast);padding:12px 14px;border-radius:0 var(--radius) var(--radius) 0;font-size:14px;color:#D6DFD8;margin:22px 0 30px}
+  .swap{background:var(--palm-deep);border-inline-start:2px solid var(--toast);padding:12px 14px;border-start-end-radius:var(--radius);border-end-end-radius:var(--radius);font-size:14px;color:#D6DFD8;margin:22px 0 30px}
   .sheet-add{width:100%;padding:15px;border:none;border-radius:var(--radius);background:var(--mint);color:var(--char);font:inherit;font-weight:700;font-size:15.5px;cursor:pointer;margin-bottom:44px}
   .sheet-add.on{background:transparent;border:1px solid var(--palm-line);color:var(--cream-dim)}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -161,7 +179,7 @@
 <div class="gauge">
   <div class="wrap">
     <div class="gauge-top">
-      <div class="kcal"><span id="gKcal">0</span><small>/ <span id="gTarget">1650</span> kcal</small></div>
+      <div class="kcal"><span id="gKcal">0</span><small id="gKcalUnit">/ 1650 kcal</small></div>
       <div class="gauge-note" id="gNote">Tap + to build today's plate</div>
     </div>
     <div class="bars">
@@ -177,8 +195,9 @@
 
 <main class="wrap">
   <div class="mast">
-    <h1>Coconut<br>Kitchen</h1>
-    <p>Coconut-flour cooking and sauces worth making at home, counted against a calorie-deficit day. No protein powder, weighed in grams, remembers where you are.</p>
+    <button class="langbtn" id="langBtn">العربية</button>
+    <h1 data-i18n="brand">Coconut<br>Kitchen</h1>
+    <p data-i18n="tagline">Coconut-flour cooking and sauces worth making at home, counted against a calorie-deficit day. No protein powder, weighed in grams, remembers where you are.</p>
   </div>
 
   <section class="install" id="installPanel" hidden>
@@ -189,68 +208,68 @@
     <button class="installbtn" id="installBtn" hidden>Install</button>
   </section>
 
-  <input class="search" id="q" type="search" placeholder="Search recipes or ingredients" aria-label="Search recipes">
+  <input class="search" id="q" type="search" placeholder="Search recipes or ingredients" data-i18n-ph="search" aria-label="Search recipes">
   <div class="filters" id="filters"></div>
   <div class="count" id="count"></div>
 
   <ul class="list" id="list"></ul>
   <p class="empty" id="empty" hidden>Nothing matches. Try a shorter word.</p>
 
-  <button class="addown" id="newRecipe">Add your own recipe</button>
+  <button class="addown" id="newRecipe" data-i18n="addOwn">Add your own recipe</button>
 
   <section class="panel">
-    <h2>Categories</h2>
-    <p class="phint">Breakfast, Savory, Sauces and Dessert are built in. Anything you add here becomes a filter above and an option in the recipe form.</p>
+    <h2 data-i18n="catsTitle">Categories</h2>
+    <p class="phint" data-i18n="catsHint">Breakfast, Savory, Sauces and Dessert are built in. Anything you add here becomes a filter above and an option in the recipe form.</p>
     <div class="catrow">
-      <input id="catName" type="text" maxlength="20" placeholder="Drinks, Marinades, Soups…" aria-label="New category name">
-      <button class="ghost" id="catAdd">Add</button>
+      <input id="catName" type="text" maxlength="20" placeholder="Drinks, Marinades, Soups…" data-i18n-ph="catsPlaceholder" aria-label="New category name">
+      <button class="ghost" id="catAdd" data-i18n="add">Add</button>
     </div>
     <p class="ferr" id="catErr"></p>
     <div class="cattags" id="catList"></div>
   </section>
 
   <section class="panel">
-    <h2>Your targets</h2>
-    <p class="phint">Change these when your weight or training does. Everything above recounts instantly.</p>
+    <h2 data-i18n="targetsTitle">Your targets</h2>
+    <p class="phint" data-i18n="targetsHint">Change these when your weight or training does. Everything above recounts instantly.</p>
     <div class="tgrid">
-      <label class="field"><span>Daily calories</span><input id="tK" type="number" inputmode="numeric" min="800" max="6000"></label>
-      <label class="field"><span>Daily protein (g)</span><input id="tP" type="number" inputmode="numeric" min="20" max="400"></label>
+      <label class="field"><span data-i18n="dailyKcal">Daily calories</span><input id="tK" type="number" inputmode="numeric" min="800" max="6000"></label>
+      <label class="field"><span data-i18n="dailyProtein">Daily protein (g)</span><input id="tP" type="number" inputmode="numeric" min="20" max="400"></label>
     </div>
   </section>
 
   <section class="panel">
-    <h2>Your recipes</h2>
+    <h2 data-i18n="mineTitle">Your recipes</h2>
     <p class="phint" id="savedNote"></p>
     <div class="btnrow">
-      <button class="ghost" id="expBtn">Download backup</button>
-      <button class="ghost" id="impBtn">Restore from file</button>
+      <button class="ghost" id="expBtn" data-i18n="backup">Download backup</button>
+      <button class="ghost" id="impBtn" data-i18n="restore">Restore from file</button>
       <input id="impFile" type="file" accept="application/json,.json" hidden>
     </div>
   </section>
 
   <section class="notes">
-    <h2>Coconut flour is not flour</h2>
+    <h2 data-i18n="notesTitle">Coconut flour is not flour</h2>
     <ol>
-      <li>It drinks liquid. Swap roughly 1 part coconut flour for 4 parts wheat flour, never 1:1.</li>
-      <li>Add one egg per 2 tbsp of coconut flour, or the whole thing turns to sand.</li>
-      <li>Let batter sit 3 to 5 minutes before cooking. It thickens a lot in that time — judge it then, not before.</li>
-      <li>Low and slow. It browns and dries faster than wheat, so drop oven temp about 15°C.</li>
-      <li>Stevia has no bulk, unlike sugar. If a bake tastes flat, it usually needs more salt or cinnamon, not more sweetener.</li>
-      <li>Weights beat spoons. Coconut flour packs differently every scoop, so 1 tbsp lands anywhere from 6 to 9 g — enough to turn a batter into a dough.</li>
+      <li data-i18n="note0">It drinks liquid. Swap roughly 1 part coconut flour for 4 parts wheat flour, never 1:1.</li>
+      <li data-i18n="note1">Add one egg per 2 tbsp of coconut flour, or the whole thing turns to sand.</li>
+      <li data-i18n="note2">Let batter sit 3 to 5 minutes before cooking. It thickens a lot in that time — judge it then, not before.</li>
+      <li data-i18n="note3">Low and slow. It browns and dries faster than wheat, so drop oven temp about 15°C.</li>
+      <li data-i18n="note4">Stevia has no bulk, unlike sugar. If a bake tastes flat, it usually needs more salt or cinnamon, not more sweetener.</li>
+      <li data-i18n="note5">Weights beat spoons. Coconut flour packs differently every scoop, so 1 tbsp lands anywhere from 6 to 9 g — enough to turn a batter into a dough.</li>
     </ol>
-    <p class="conv">Converting your own recipes: coconut flour 1 tbsp ≈ 7 g · cocoa 1 tbsp ≈ 5 g · peanut butter 1 tbsp ≈ 16 g · yogurt 1 tbsp ≈ 15 g · butter or oil 1 tbsp ≈ 14 g · desiccated coconut 1 tbsp ≈ 6 g · honey 1 tbsp ≈ 21 g</p>
+    <p class="conv" data-i18n="conv">Converting your own recipes: coconut flour 1 tbsp ≈ 7 g · cocoa 1 tbsp ≈ 5 g · peanut butter 1 tbsp ≈ 16 g · yogurt 1 tbsp ≈ 15 g · butter or oil 1 tbsp ≈ 14 g · desiccated coconut 1 tbsp ≈ 6 g · honey 1 tbsp ≈ 21 g</p>
   </section>
 
   <footer>
-    Targets: 1,650 kcal and 130 g protein — roughly a 500 kcal deficit for a 29-year-old male, 165 cm, 66.7 kg, lightly active. Change the TARGETS values at the top of the script if your activity or weight changes.<br><br>
-    Carb figures are net carbs where the source recipe gave them. Numbers are close estimates, not lab values — weigh your own flour and nut butter, brands vary.
+    <span data-i18n="foot1">Targets: 1,650 kcal and 130 g protein — roughly a 500 kcal deficit for a 29-year-old male, 165 cm, 66.7 kg, lightly active. Change the TARGETS values at the top of the script if your activity or weight changes.</span><br><br>
+    <span data-i18n="foot2">Carb figures are net carbs where the source recipe gave them. Numbers are close estimates, not lab values — weigh your own flour and nut butter, brands vary.</span>
   </footer>
 </main>
 
 <div class="sheet" id="form" role="dialog" aria-modal="true" aria-label="Recipe editor">
   <div class="wrap">
     <div class="sheet-bar">
-      <button class="backbtn" id="fCancel">← Cancel</button>
+      <button class="backbtn" id="fCancel"><span id="fCancelArrow">←</span> <span data-i18n="cancel">Cancel</span></button>
       <span id="fTitle" style="font-size:12.5px;color:var(--cream-dim)"></span>
     </div>
     <div id="fBody"></div>
@@ -262,7 +281,7 @@
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Recipe">
   <div class="wrap">
     <div class="sheet-bar">
-      <button class="backbtn" id="back">← All recipes</button>
+      <button class="backbtn" id="back"><span id="backArrow">←</span> <span data-i18n="back">All recipes</span></button>
       <span id="sTag" style="font-size:12.5px;color:var(--cream-dim)"></span>
     </div>
     <div id="sBody"></div>
@@ -553,6 +572,369 @@ const RECIPES = [
 ];
 </script>
 <script>
+const AR = {
+ui:{
+ brand:"مطبخ جوز الهند",
+ tagline:"طبخ بطحين جوز الهند وصلصات تستحق أن تُصنع في البيت، محسوبة على يوم حمية. بلا بروتين باودر، بالغرامات، ويتذكّر أين وصلت.",
+ search:"ابحث عن وصفة أو مكوّن",
+ recipes:"وصفة", recipesPlural:"وصفة",
+ emptyNone:"لا شيء يطابق البحث. جرّب كلمة أقصر.",
+ emptyMine:"لم تحفظ شيئاً بعد. أضف وصفة وستظهر هنا.",
+ tapPlus:"اضغط + لتبني أكل اليوم",
+ free:"باقي لك {n} سعرة", over:"تجاوزت الهدف بـ {n} سعرة",
+ protein:"بروتين {a} / {b} غم", ofKcal:"/ {n} سعرة",
+ clearDay:"مسح اليوم",
+ addOwn:"أضف وصفتك",
+ catsTitle:"التصنيفات",
+ catsHint:"فطور وأطباق رئيسية وصلصات وحلويات جاهزة. أي تصنيف تضيفه هنا يصير فلتراً في الأعلى وخياراً في نموذج الوصفة.",
+ catsPlaceholder:"مشروبات، تتبيلات، شوربات…",
+ add:"إضافة",
+ catEmpty:"اكتب اسماً أولاً.",
+ catLong:"خلّه أقل من 20 حرفاً.",
+ catTaken:"{n} موجود أصلاً كفلتر.",
+ catDup:"عندك هذا التصنيف من قبل.",
+ catUsed:"{n} ما زال مستخدماً في {c} وصفة. انقلها إلى تصنيف آخر أولاً.",
+ catAdded:"تمت إضافة {n}",
+ targetsTitle:"أهدافك",
+ targetsHint:"غيّرها كلما تغيّر وزنك أو تدريبك. كل شيء فوق يُعاد حسابه فوراً.",
+ dailyKcal:"السعرات اليومية", dailyProtein:"البروتين اليومي (غم)",
+ mineTitle:"وصفاتك",
+ mineNone:"ليس عندك وصفات خاصة بعد.",
+ mineCount:"{n} وصفة محفوظة على هذا الجهاز.",
+ storeOk:" يومك ووصفاتك محفوظة هنا ولا تضيع عند تحديث الصفحة.",
+ storeNo:" هذا المتصفح يمنع التخزين، فلن يبقى شيء بعد التحديث — نزّل الملف وافتحه مباشرة لحل المشكلة.",
+ backup:"تنزيل نسخة احتياطية", restore:"استعادة من ملف",
+ backupDone:"تم تنزيل النسخة", badFile:"هذا الملف ليس نسخة احتياطية",
+ added1:"أُضيفت وصفة واحدة", addedN:"أُضيفت {n} وصفة",
+ notesTitle:"طحين جوز الهند ليس طحيناً عادياً",
+ notes:[
+  "يشرب السوائل. استبدل جزءاً واحداً من طحين جوز الهند بأربعة أجزاء من الطحين العادي، لا واحد بواحد أبداً.",
+  "بيضة لكل ملعقتين كبيرتين منه، وإلا تحوّل الخليط إلى رمل.",
+  "اترك الخليط يرتاح 3 إلى 5 دقائق قبل الطبخ. يثخن كثيراً في هذه المدة — احكم عليه بعدها لا قبلها.",
+  "حرارة هادئة ووقت أطول. يحترق ويجف أسرع من الطحين العادي، فاخفض حرارة الفرن نحو 15 درجة.",
+  "الستيفيا بلا حجم، بعكس السكر. إذا جاء طعم المخبوز باهتاً فهو يحتاج ملحاً أو قرفة أكثر، لا محلّياً أكثر.",
+  "الميزان أفضل من الملاعق. طحين جوز الهند يُكبس بشكل مختلف كل مرة، فالملعقة الكبيرة تتراوح بين 6 و9 غرامات — فرق يكفي ليحوّل الخليط إلى عجين."
+ ],
+ conv:"لتحويل وصفاتك: طحين جوز الهند ملعقة كبيرة ≈ 7 غم · كاكاو ≈ 5 غم · زبدة فول سوداني ≈ 16 غم · لبن ≈ 15 غم · زبدة أو زيت ≈ 14 غم · جوز هند مبشور ≈ 6 غم · عسل ≈ 21 غم",
+ foot1:"الأهداف: 1650 سعرة و130 غم بروتين — أي عجز يقارب 500 سعرة لرجل عمره 29 سنة، طوله 165 سم، ووزنه 66.7 كغم، بنشاط خفيف. غيّر قيم TARGETS في أعلى السكربت إذا تغيّر نشاطك أو وزنك.",
+ foot2:"أرقام الكارب صافية حيث ذكرها المصدر الأصلي. الأرقام تقديرات قريبة لا قياسات مختبرية — زِن طحينك وزبدتك بنفسك، فالعلامات التجارية تختلف.",
+ installTitle:"ثبّته كتطبيق",
+ installReady:"يضيف مطبخ جوز الهند إلى شاشتك الرئيسية. يفتح بملء الشاشة، بلا شريط عنوان، ويعمل بدون إنترنت.",
+ installFileTitle:"لا يمكن التثبيت من ملف منزّل",
+ installFile:"كروم يثبّت الصفحات المرفوعة على https فقط. ارفع هذا المجلد على GitHub Pages أو أي استضافة مجانية، وافتح الرابط، وسيظهر زر التثبيت هنا.",
+ installIos:"في سفاري، اضغط زر المشاركة ثم أضف إلى الشاشة الرئيسية.",
+ installManual:"في كروم، افتح قائمة ⋮ واضغط إضافة إلى الشاشة الرئيسية. إذا لم تجدها، حدّث الصفحة مرة وأعد المحاولة.",
+ install:"تثبيت", installing:"جارٍ التثبيت", installed:"تم التثبيت — افتحه من شاشتك الرئيسية",
+ back:"كل الوصفات",
+ kcal:"سعرة", proteinG:"بروتين (غم)", carbsG:"كارب (غم)", fatG:"دهون (غم)",
+ proteinU:"غم بروتين", carbsU:"غم كارب", fatU:"غم دهون",
+ keeps:"يبقى صالحاً {n}.",
+ batch:"حجم الوصفة", servings:"عدد الحصص",
+ perServing:"الأرقام أعلاه لكل حصة",
+ ingredients:"المكوّنات",
+ boostTitle:"ليصير بطعم المطاعم",
+ boostCap:"كلها اختيارية. زِنها — الغلوتامات تحتاج 0.3 إلى 0.5% من وزن الصلصة، وفوق 1% تقريباً يصير الطعم معدنياً. ذوّب المساحيق في الخل أو عصير الليمون قبل الخلط.",
+ method:"الطريقة",
+ addToday:"أضف {n} سعرة لليوم", removeToday:"احذف من اليوم",
+ editRecipe:"تعديل الوصفة", del:"حذف",
+ confirmDel:"حذف {n}؟ لا يمكن التراجع.",
+ deleted:"حُذفت الوصفة",
+ shareCard:"مشاركة كبطاقة", shareText:"مشاركة كنص",
+ sharing:"جارٍ تجهيز البطاقة…", shareSaved:"حُفظت البطاقة كصورة", copied:"نُسخت الوصفة",
+ fNew:"وصفة جديدة", fEdit:"تعديل وصفتك", fEditH:"تعديل الوصفة", fNewH:"وصفتك",
+ fName:"الاسم", fNamePh:"سلطة حلوم مشوي",
+ fPic:"الصورة", fCat:"التصنيف", fTime:"الوقت", fTimePh:"20 دقيقة",
+ fServes:"تكفي (حصص)", fKeeps:"مدة الحفظ", fKeepsPh:"4 أيام في الثلاجة",
+ fPerServing:"لكل حصة، لا للوصفة كاملة.",
+ fBlurb:"سطر تعريفي", fBlurbPh:"ما الذي يجعلها تستحق الطبخ",
+ fIng:"المكوّنات — واحد بكل سطر، الاسم ثم شرطة عمودية ثم الكمية",
+ fIngPh:"طحين جوز الهند | 28 غم\nبيض | 2\nقرفة | ملعقة صغيرة",
+ fSteps:"الطريقة — خطوة بكل سطر",
+ fStepsPh:"سخّن الفرن على 180 درجة.\nاخلط كل شيء واتركه 5 دقائق.",
+ fBoost:"إضافات اختيارية — الاسم | الكمية | السبب",
+ fBoostPh:"غلوتامات | 1 غم | عمق في الطعم",
+ fSwap:"نصيحة أو بديل (اختياري)",
+ fSave:"حفظ الوصفة", fSaveEdit:"حفظ التعديلات",
+ errName:"أعطِ الوصفة اسماً.", errK:"السعرات لكل حصة ضرورية — عدّاد اليوم يعتمد عليها.", errIng:"أضف مكوّناً واحداً على الأقل.",
+ saved:"حُفظت الوصفة", savedEdit:"حُفظت التعديلات",
+ langBtn:"English", cancel:"إلغاء", tabEn:"English", tabAr:"العربية",
+ tabHint:"اكتبها بلغة واحدة أو بالاثنتين. إذا تركت جهة فارغة، تُعرض الجهة الأخرى بدلاً منها.",
+ shared:"مشترك بين اللغتين", textFor:"النص بـ {n}", proteinShort:"غم بروتين", shareFail:"تعذّر إنشاء البطاقة", yours:"وصفتك", makes:"تكفي {n}"
+},
+cat:{ "All":"الكل", "Breakfast":"فطور", "Savory":"أطباق رئيسية", "Sauces":"صلصات", "Dessert":"حلويات",
+ "High protein":"بروتين عالي", "Under 200":"أقل من 200", "Batch prep":"تحضير بكميات", "Coffee dipper":"مع القهوة", "No bake":"بدون فرن", "My recipes":"وصفاتي" },
+ing:{
+"Apple cider vinegar":"خل التفاح","Baking powder":"بيكنغ باودر","Berries":"توت","Black pepper":"فلفل أسود",
+"Brown sugar":"سكر بني","Canned tuna, drained":"تونة معلّبة مصفّاة","Cayenne":"فلفل حار مطحون","Cheese, shredded":"جبن مبشور",
+"Chicken breast":"صدر دجاج","Chipotle paste or harissa":"معجون تشيبوتلي أو هريسة","Chopped vegetables":"خضار مفرومة",
+"Cinnamon":"قرفة","Cinnamon + stevia (dusting)":"قرفة + ستيفيا (للرش)","Cinnamon or instant espresso":"قرفة أو قهوة سريعة الذوبان",
+"Cocoa powder":"كاكاو","Coconut flour":"طحين جوز الهند","Cold water":"ماء بارد","Cumin and chili":"كمّون وفلفل حار",
+"Desiccated coconut":"جوز هند مبشور","Dijon mustard":"خردل ديجون","Dried dill":"شبت مجفف","Dried mint":"نعناع مجفف",
+"Dried parsley":"بقدونس مجفف","Egg":"بيضة","Egg white":"بياض بيضة","Egg whites":"بياض بيض","Eggs":"بيض",
+"Garlic cloves, peeled":"فصوص ثوم مقشّرة","Garlic powder":"بودرة ثوم","Garlic, crushed":"ثوم مهروس","Garlic, minced":"ثوم مفروم",
+"Grated cheese":"جبن مبشور","Greek yogurt (0%)":"لبن يوناني خالي الدسم","Ground cardamom or anise":"هيل أو يانسون مطحون",
+"Ground cinnamon":"قرفة مطحونة","Ground cinnamon (dough)":"قرفة مطحونة (للعجين)","Ground cinnamon (swirl)":"قرفة مطحونة (للحشوة)",
+"Honey":"عسل","Ice water":"ماء مثلّج","Ketchup":"كاتشب","Lean turkey or beef mince":"لحم ديك رومي أو بقر مفروم قليل الدهن",
+"Lemon juice":"عصير ليمون","Lemon zest":"برش ليمون","Lime or lemon juice":"عصير لايم أو ليمون","Mayonnaise":"مايونيز",
+"Melted butter (batter)":"زبدة مذابة (للخليط)","Melted butter (swirl)":"زبدة مذابة (للحشوة)","Melted butter or coconut oil":"زبدة مذابة أو زيت جوز هند",
+"Melted butter or ghee":"زبدة مذابة أو سمن","Melted butter or oil":"زبدة مذابة أو زيت","Milk":"حليب","Milk or buttermilk":"حليب أو لبن رائب",
+"Milk or water":"حليب أو ماء","Olive oil":"زيت زيتون","Olive oil or butter":"زيت زيتون أو زبدة","Olive or coconut oil":"زيت زيتون أو جوز هند",
+"Onion powder":"بودرة بصل","Onion, grated":"بصلة مبشورة","Oregano":"أوريغانو","Oregano or garlic powder":"أوريغانو أو بودرة ثوم",
+"Oregano or thyme":"أوريغانو أو زعتر","Paprika":"بابريكا","Parsley, cumin, salt":"بقدونس وكمّون وملح","Peanut butter":"زبدة فول سوداني",
+"Pickle relish, drained":"مخلل مفروم مصفّى","Salt":"ملح","Salt and pepper":"ملح وفلفل","Smoked paprika":"بابريكا مدخنة",
+"Smooth peanut butter":"زبدة فول سوداني ناعمة","Softened butter":"زبدة طرية","Spring onion":"بصل أخضر","Stevia":"ستيفيا",
+"Stevia (batter)":"ستيفيا (للخليط)","Stevia (dough)":"ستيفيا (للعجين)","Stevia (swirl)":"ستيفيا (للحشوة)","Sugar or stevia":"سكر أو ستيفيا",
+"Sunflower or canola oil":"زيت دوّار الشمس أو كانولا","Sweet paprika":"بابريكا حلوة","Tahini":"طحينة","Thick yogurt or labneh":"لبن ثخين أو لبنة",
+"Vanilla":"فانيلا","Vanilla extract":"خلاصة فانيلا","Vanilla, nutmeg or clove":"فانيلا أو جوزة الطيب أو قرنفل","Warm water":"ماء دافئ",
+"Water or milk":"ماء أو حليب","White vinegar":"خل أبيض","Worcestershire sauce":"صلصة ورسيستر","Yellow mustard":"خردل أصفر","Zucchini, grated":"كوسا مبشورة",
+"MSG":"غلوتامات أحادية الصوديوم (أجينوموتو)","Citric acid":"حامض الستريك (ملح ليمون)","Pickle brine":"ماء المخلل",
+"Xanthan gum":"صمغ زانثان","Liquid smoke":"دخان سائل"
+},
+keeps:{
+"1 week refrigerated":"أسبوع في الثلاجة",
+"2 to 3 weeks in a sealed jar at room temperature":"أسبوعين إلى ثلاثة في مرطبان محكم بحرارة الغرفة",
+"2 weeks refrigerated":"أسبوعين في الثلاجة",
+"2 weeks refrigerated, 2 months frozen":"أسبوعين في الثلاجة، وشهرين في الفريزر",
+"3 days in the fridge, wrapped":"3 أيام في الثلاجة، ملفوفة",
+"3 to 4 days refrigerated":"3 إلى 4 أيام في الثلاجة",
+"3 weeks refrigerated":"3 أسابيع في الثلاجة",
+"3 weeks refrigerated in a sealed jar":"3 أسابيع في الثلاجة داخل مرطبان محكم",
+"3+ weeks in a sealed jar at room temperature":"3 أسابيع فأكثر في مرطبان محكم بحرارة الغرفة",
+"4 days refrigerated":"4 أيام في الثلاجة",
+"4 to 5 days refrigerated":"4 إلى 5 أيام في الثلاجة",
+"5 days in a sealed jar":"5 أيام في مرطبان محكم",
+"5 days refrigerated":"5 أيام في الثلاجة",
+"5 to 6 days refrigerated":"5 إلى 6 أيام في الثلاجة",
+"5 to 7 days in a sealed jar":"5 إلى 7 أيام في مرطبان محكم",
+"5 to 7 days refrigerated":"5 إلى 7 أيام في الثلاجة",
+"up to 7 days refrigerated":"حتى 7 أيام في الثلاجة"
+},
+r:{
+1:{n:"بان كيك جوز الهند",b:"سميك وحلو قليلاً، ويتحمّل ملعقة لبن فوقه.",
+ s:["اخفق البيض مع الحليب، ثم أضف طحين جوز الهند والبيكنغ باودر والقرفة والستيفيا.",
+    "اتركه يرتاح 5 دقائق. إذا صار أثخن من خليط كثيف، خفّفه برشة حليب.",
+    "اطبخ 4 أقراص صغيرة على نار هادئة، دقيقتان لكل جهة. الصغيرة تنقلب بسهولة والكبيرة تتمزّق.",
+    "رصّها فوق بعض وضع فوقها توتاً أو ملعقة لبن يوناني."],
+ w:"بيضتان مع بياضين يخفضانها إلى 225 سعرة ويبقى البروتين 19 غم."},
+2:{n:"شوربة جوز الهند للفطور",b:"صحن دافئ للصباحات الباردة، بلا شوفان.",
+ s:["سخّن الحليب في قدر صغير على نار هادئة.",
+    "أضف طحين جوز الهند والقرفة وحرّك باستمرار دقيقتين حتى يثخن.",
+    "ارفعه عن النار وأضف بياض البيض بخفق سريع حتى لا يتخثّر، ثم أعده للنار 30 ثانية.",
+    "حلّه حسب ذوقك، اسكبه في صحن، وضع التوت فوقه."],
+ w:"ملعقة كبيرة من الشيا في النهاية تجعله أثخن وأكثر إشباعاً (+58 سعرة)."},
+3:{n:"كريب جوز الهند",b:"رقيق ويُطوى. يصلح حلواً أو مالحاً.",
+ s:["اخلط كل شيء حتى يصير ناعماً تماماً، ثم اتركه 5 دقائق.",
+    "سخّن مقلاة تفلون على نار هادئة وامسحها بأرقّ طبقة زيت.",
+    "اسكب طبقة رقيقة، دوّر المقلاة، واطبخ 90 ثانية حتى ترتفع الأطراف. اقلبه بحذر — أرقّ من كريب الطحين العادي.",
+    "تعطي 3 أقراص. احشها بلبن وفواكه، أو بكفتة التونة أدناه."],
+ w:"للنسخة المالحة: أضف بودرة ثوم وفلفلاً أسود إلى الخليط."},
+4:{n:"أصابع دجاج مقرمشة",b:"في الفرن أو القلاية الهوائية، مقرمشة فعلاً وبلا قلي عميق.",
+ s:["سخّن الفرن على 200 درجة. قطّع الدجاج أصابع بعرض إصبع.",
+    "اخلط طحين جوز الهند مع البابريكا وبودرة الثوم والملح والفلفل في صحن.",
+    "اغمس كل قطعة في البيض المخفوق ثم اضغطها جيداً في خليط الطحين من كل الجهات.",
+    "رتّبها في صينية مبطّنة، ادهنها بقليل من الزيت، واخبزها 20 دقيقة مع قلبها مرة في المنتصف.",
+    "اتركها 3 دقائق قبل الأكل حتى تتماسك القشرة."],
+ w:"في القلاية الهوائية: 190 درجة لمدة 12 دقيقة مع رجّها عند الدقيقة 6."},
+5:{n:"خبز جوز الهند للف",b:"طري بما يكفي ليُلفّ حول أي شيء. يعطي 3 أرغفة.",
+ s:["اخلط كل شيء حتى تحصل على عجينة طرية، ثم اتركها 10 دقائق — هذه الخطوة هي التي تجعلها قابلة للف.",
+    "قسّمها 3 كرات. افرد كل واحدة بين ورقتي خبز حتى ترقّ.",
+    "اطبخها على مقلاة ساخنة جافة، دقيقة إلى دقيقتين لكل جهة، حتى تنقّط.",
+    "رصّها تحت منشفة وهي دافئة حتى تبقى طرية."],
+ w:"ملعقة صغيرة من قشور السيليوم في العجين تجعلها أكثر مطاطية بوضوح."},
+6:{n:"قاعدة بيتزا فردية",b:"القاعدة فقط — احسب الإضافات فوقها.",
+ s:["سخّن الفرن على 190 درجة. اخلط كل شيء حتى تحصل على عجينة ثخينة لزجة واتركها 5 دقائق.",
+    "افردها على ورق الخبز بيدين مبلولتين، بسماكة 5 ملم — أرقّ مما تتصوّر.",
+    "اخبز القاعدة وحدها 12 دقيقة حتى تجف وتتماسك.",
+    "أضف الصلصة والإضافات، ثم اخبزها 8 دقائق أخرى."],
+ w:"خبز القاعدة وحدها أولاً ليس اختيارياً. الإضافات على عجين نيء تترك وسطها طرياً."},
+7:{n:"كرات لحم قليلة الدهن",b:"طحين جوز الهند بدل البقسماط كمادة رابطة — يبقيها طرية.",
+ s:["اعجن كل شيء بيديك، ثم اترك الخليط 10 دقائق ليمتص الطحين الرطوبة.",
+    "شكّل 12 كرة. بلّل يديك حتى لا تلتصق.",
+    "اخبزها على 200 درجة لمدة 18 دقيقة، أو حمّرها في المقلاة ثم غطّها مع رشة ماء 8 دقائق.",
+    "قدّمها مع خبز اللف أعلاه أو فوق سلطة."],
+ w:"التزم بـ 14 غم. طحين جوز الهند أكثر يجعلها جافة ومفتّتة."},
+8:{n:"عجّة الكوسا",b:"استعمال جيد للخضار التي لا أحد يخطط لها وجبة.",
+ s:["ملّح الكوسا المبشورة واتركها 10 دقائق، ثم اعصرها من الماء بأقصى ما تستطيع. هذه الخطوة تحدد هل ستتماسك أم لا.",
+    "اخلطها مع البيض وطحين جوز الهند والبصل الأخضر والبهارات.",
+    "ضعها بالملعقة في مقلاة مدهونة قليلاً، سطّحها، واطبخها 3 دقائق لكل جهة على نار متوسطة.",
+    "كلها ساخنة مع لبن بالثوم."],
+ w:"الطريقة نفسها تنجح مع الجزر المبشور أو الملفوف."},
+9:{n:"كيك الكوب بـ 90 ثانية",b:"الوصفة التي تمنع نوبة الحلو الليلية من إفساد يومك.",
+ s:["اخفق كل شيء مباشرة في كوب واسع حتى تختفي التكتلات.",
+    "ضعه في المايكرويف 60 ثانية. تفقّد الوسط — زده 15 ثانية إن كان ما زال سائلاً.",
+    "أوقفه لحظة تماسكه. طحين جوز الهند يصير مطاطياً بسرعة إذا زاد طبخه.",
+    "كله من الكوب مباشرة."],
+ w:"ملعقة صغيرة زبدة فول سوداني مغروسة في الوسط قبل المايكرويف (+32 سعرة)."},
+10:{n:"مربعات براوني طرية",b:"اللبن يقوم بدور الزبدة هنا. تعطي 9 مربعات.",
+ s:["سخّن الفرن على 175 درجة وبطّن قالباً مربعاً صغيراً.",
+    "اخفق البيض واللبن والزيت والفانيلا والستيفيا، ثم أضف طحين جوز الهند والكاكاو.",
+    "اتركه 5 دقائق، ثم افرده في القالب — الخليط ثخين فاضغطه ليستوي.",
+    "اخبزه 18 إلى 20 دقيقة. أخرجه والوسط ما زال يبدو غير ناضج قليلاً؛ يتماسك وهو يبرد.",
+    "برّده تماماً قبل التقطيع وإلا تفتّت. قطّعه 3 في 3."],
+ w:"برّدها ليلة كاملة. البرودة تضاعف طعم الطراوة."},
+11:{n:"كوكيز زبدة الفول السوداني",b:"طرية من الوسط، أربعة مكوّنات. تعطي 8 حبات.",
+ s:["سخّن الفرن على 175 درجة.",
+    "اخلط كل شيء حتى تحصل على عجينة متماسكة. أضف الحليب ملعقة صغيرة كل مرة فقط إن لم تتماسك.",
+    "شكّل 8 كرات، سطّحها بالشوكة على شكل شبكة، ووزّعها متباعدة في صينية مبطّنة.",
+    "اخبزها 10 إلى 12 دقيقة حتى تتلوّن الأطراف. تتماسك وهي تبرد — لا تحكم عليها ساخنة."],
+ w:"اغرس نصف مربع شوكولاتة داكنة في كل حبة قبل الخبز (+15 سعرة للحبة)."},
+12:{n:"كرات جوز الهند بالليمون",b:"بلا فرن، حامضة ومنعشة. تعطي 10 كرات.",
+ s:["اخلط كل شيء حتى تحصل على عجينة تتماسك عند الضغط.",
+    "إذا كانت جافة أضف اللبن نصف ملعقة صغيرة كل مرة. إذا كانت رطبة أضف ملعقة طحين جوز هند.",
+    "شكّل 10 كرات صغيرة وغلّفها بجوز هند مبشور إضافي.",
+    "برّدها 30 دقيقة على الأقل. تتماسك جيداً في الثلاجة وتبقى 5 أيام."],
+ w:"برش برتقال ورشة هيل بدل الليمون."},
+13:{n:"كفتة التونة المقرمشة",b:"قرصان، 38 غم بروتين، وبلا رائحة تونة معلّبة بعد التحمير.",
+ s:["اعصر السائل من التونة جيداً. التونة الرطبة لا تعطي قشرة.",
+    "اخفق البيضة مع عصير الليمون والملح والفلفل وبودرة الثوم، ثم أضف التونة وطحين جوز الهند.",
+    "اترك الخليط دقيقتين ليتماسك، ثم شكّل قرصين بسماكة 1.5 سم.",
+    "في المقلاة: ملعقة زيت على نار متوسطة، حمّر 3 إلى 4 دقائق بلا تحريك حتى يصير ذهبياً غامقاً، اقلب، ثم 2 إلى 3 دقائق. في القلاية الهوائية: 190 درجة 6 دقائق، اقلب، ثم 2 إلى 4 دقائق.",
+    "اتركها دقيقتين في الصحن قبل الأكل حتى تتماسك."],
+ w:"الفلفل الحار المجروش أو الكمّون أو البقدونس المجفف كلها تنفع في الخليط."},
+14:{n:"صينية البيض والخضار",b:"قوامها كالبودينغ. طحين جوز الهند هو ما يمنعها من إطلاق الماء في الثلاجة.",
+ s:["سخّن الفرن على 180 درجة وادهن صينية 20×20 سم.",
+    "اخفق البيض والحليب والبهارات والبيكنغ باودر، ثم أضف طحين جوز الهند واخفق حتى تختفي التكتلات تماماً.",
+    "أضف الجبن والخضار وحرّك، ثم اسكب الخليط في الصينية.",
+    "اخبزها 28 إلى 32 دقيقة حتى يتماسك الوسط وتتحمّر الأطراف.",
+    "برّدها تماماً ثم قطّعها 6 مربعات. كلها باردة، أو 45 ثانية في المايكرويف، أو 3 دقائق على 160 درجة في القلاية."],
+ w:"السبانخ والفطر المقلي والبصل والفلفل كلها تنفع. اعصر الخضار المائية أولاً."},
+15:{n:"أقراص الجبن والأعشاب",b:"أقراص تحلّ محل رغيف الخبز. تعطي 4 حبات.",
+ s:["اخفق البيض مع الحليب وبودرة الثوم والأعشاب والملح والفلفل. أضف طحين جوز الهند والبيكنغ باودر.",
+    "أضف الجبن المبشور واترك العجين دقيقتين حتى يثخن.",
+    "شكّل 4 أقراص مدوّرة.",
+    "في القلاية الهوائية على 170 درجة لمدة 8 إلى 10 دقائق حتى تتحمّر من فوق.",
+    "لإعادة القرمشة: 180 درجة لدقيقتين."],
+ w:"الشيدر أو الموزاريلا أو القشقوان، كلها تتصرّف بنفس الطريقة هنا."},
+16:{n:"صينية السينابون",b:"سينابون بلا لفّ. تعطي 8 قطع.",
+ s:["سخّن الفرن على 175 درجة وبطّن قالب 20×20 سم.",
+    "اخفق البيض والزبدة المذابة والحليب والستيفيا والفانيلا والملح. أضف طحين جوز الهند والبيكنغ باودر.",
+    "اتركه 3 دقائق ليثخن، ثم افرده في القالب.",
+    "اخلط قرفة الحشوة مع الزبدة والستيفيا حتى تصير معجوناً. وزّعه نقطاً فوق الخليط ومرّر سكيناً بحركة متعرّجة.",
+    "اخبزها 25 إلى 28 دقيقة حتى يرتد الوسط عند الضغط. برّدها تماماً ثم قطّعها 8 مربعات."],
+ w:"معجون الحشوة يحترق إذا بقي مكشوفاً على السطح — أدخله في الخليط بالسكين ولا تتركه فوق."},
+17:{n:"مافن القرفة والفانيلا",b:"فطور تأخذه وتخرج. تعطي 6 حبات.",
+ s:["اخفق البيض والستيفيا والحليب والزبدة المذابة والفانيلا. أضف طحين جوز الهند والبيكنغ باودر والقرفة.",
+    "اتركه 3 دقائق ليثخن.",
+    "وزّعه بالتساوي في 6 قوالب مافن مبطّنة.",
+    "اخبزه على 175 درجة، في الفرن أو القلاية الهوائية، 15 إلى 18 دقيقة حتى يخرج عود الأسنان نظيفاً.",
+    "لإعادة التسخين: 2 إلى 3 دقائق على 160 درجة، أو كلها باردة من الثلاجة."],
+ w:"نصف تفاحة مبشورة تضيف رطوبة مقابل 5 سعرات تقريباً للحبة."},
+18:{n:"سكونز القرفة باللبن",b:"متماسك وقريب من البسكويت، مقرمش من الخارج. يعطي 4 حبات.",
+ s:["اخفق اللبن والبيض والستيفيا، ثم أضف طحين جوز الهند والبيكنغ باودر والقرفة والملح.",
+    "اتركه دقيقتين حتى يصير عجيناً متماسكاً.",
+    "شكّل 4 قطع مدوّرة أو مثلثة بسماكة 1.5 إلى 2 سم.",
+    "في القلاية الهوائية على 170 درجة لمدة 8 إلى 10 دقائق حتى تتحمّر وتقرمش.",
+    "لإعادة القرمشة لاحقاً: 180 درجة لدقيقتين."],
+ w:"اللبن السائل يعطي عجيناً لزجاً. صفّه أولاً أو أضف ملعقة طحين جوز هند إضافية."},
+19:{n:"كيك القهوة بالبهارات",b:"خبزة واحدة تكفي فطور أسبوع. تعطي 8 شرائح.",
+ s:["سخّن الفرن على 175 درجة وبطّن قالب كيك مستطيل.",
+    "اخفق البيض والزبدة والحليب والستيفيا والفانيلا حتى ترغي — الرغوة هي ما يبقيه خفيفاً.",
+    "أضف طحين جوز الهند والبيكنغ باودر والقرفة والملح، ثم اتركه 5 دقائق حتى يثخن.",
+    "سوِّ السطح في القالب واخبزه 35 إلى 40 دقيقة حتى يخرج السيخ جافاً.",
+    "برّده تماماً قبل تقطيعه 8 شرائح."],
+ w:"لفّ الشرائح كل واحدة وحدها وجمّد نصفها. تذوب خلال ساعة."},
+20:{n:"كيك القرفة في الراميكن",b:"يُصنع في الوعاء ويؤكل منه. صحن واحد فقط.",
+ s:["ادهن داخل وعاء راميكن مقاوم للفرن بالزبدة.",
+    "اخفق البيضة والزبدة والحليب والستيفيا والقرفة والملح داخل الوعاء نفسه.",
+    "أضف طحين جوز الهند والبيكنغ باودر واتركه دقيقتين.",
+    "قلاية هوائية 165 درجة لمدة 10 إلى 12 دقيقة، أو فرن 180 درجة لمدة 15 إلى 18 دقيقة.",
+    "كله دافئاً، أو برّده ليلة وكله بارداً."],
+ w:"ملعقة كبيرة تفاح مقطّع ناعماً، أو رشة هيل أو زنجبيل."},
+21:{n:"كوكيز سنيكردودل",b:"مفتّتة ومغطاة بالقرفة، 75 سعرة للحبة. تعطي 10 حبات.",
+ s:["سخّن الفرن على 175 درجة وبطّن صينية.",
+    "اهرس الزبدة الطرية مع الستيفيا، أضف البيض، ثم طحين جوز الهند والقرفة والبيكنغ باودر والملح. اعجن حتى تصير كرة متماسكة واتركها 3 دقائق.",
+    "شكّل 10 كرات وسطّحها بكفّك أو بالشوكة.",
+    "رش الوجه بسخاء بخليط القرفة والستيفيا.",
+    "اخبزها 14 إلى 17 دقيقة حتى تتماسك الأطراف. برّدها تماماً في الصينية — تتصلّب وهي تبرد."],
+ w:"20 غم جوز مجروش في العجين تضيف نحو 14 سعرة للحبة."},
+22:{n:"بسكوتي الأمريكانو",b:"مخبوز مرتين ليُغمس في القهوة السوداء. يعطي 8 أصابع، والحصة إصبعان.",
+ s:["اخفق البيض والزبدة والستيفيا. أضف طحين جوز الهند والبيكنغ باودر والملح والقرفة، ثم اتركه 3 دقائق.",
+    "شكّله قالباً مسطحاً على ورق الخبز بسماكة 2 سم وعرض 6 إلى 7 سم.",
+    "الخبزة الأولى على 175 درجة لمدة 15 دقيقة حتى يتماسك. برّده 10 دقائق.",
+    "قطّعه بشكل مائل أصابع بسماكة 1.5 سم ورتّبها مسطحة.",
+    "الخبزة الثانية على 150 درجة لمدة 6 إلى 8 دقائق لكل جهة حتى يجف تماماً. المفروض أن يكون قاسياً — هذا ما يجعله يُغمس جيداً."],
+ w:"القهوة سريعة الذوبان بدل القرفة تجعل طعمه مثل القهوة التي يُغمس فيها."},
+23:{n:"بقسماط الهيل للقهوة",b:"على طريقة البقسماط. قاسٍ في المرطبان، وطري لحظة ملامسته للقهوة. يعطي 12 إلى 14 قطعة.",
+ s:["اخفق البيض والزبدة والستيفيا والهيل. أضف طحين جوز الهند والبيكنغ باودر والملح، ثم اعجن كرة متماسكة مع إضافة الحليب رشة رشة إن كانت جافة.",
+    "افرده مستطيلاً بسماكة 1.5 سم في صينية مبطّنة. اخبزه على 170 درجة لمدة 18 إلى 20 دقيقة، ثم برّده 15 دقيقة.",
+    "قطّعه أصابع بسكين مسنّن.",
+    "اخفض الفرن إلى 130 درجة وجفّفه 25 إلى 30 دقيقة، متباعداً، حتى يقرمش تماماً.",
+    "برّده تماماً قبل وضعه في المرطبان، وإلا رطّبه البخار المحبوس."],
+ w:"انقطعت الكهرباء؟ هذه هي الوصفة التي تُحضّر مسبقاً. تبقى أسابيع بلا ثلاجة."},
+24:{n:"كرات زبدة الفول السوداني بلا فرن",b:"بلا حرارة وبلا فرن، بقوام عجينة الكوكيز. تعطي 8 إلى 10 كرات، والحصة كرتان.",
+ s:["ليّن زبدة الفول السوداني قليلاً وحرّكها مع الستيفيا والملح.",
+    "أضف طحين جوز الهند، ثم أضف السائل ملعقة كبيرة كل مرة واعجن بيدك حتى تصير العجينة ناعمة ولدنة.",
+    "شكّل 8 إلى 10 كرات صغيرة.",
+    "احفظها باردة وخذ كرتين مباشرة من الثلاجة مع القهوة الساخنة."],
+ w:"غلّفها بالقرفة أو الكاكاو غير المحلّى قبل التبريد."},
+25:{n:"صلصة الثوم بأسلوب هارديز",b:"توم. تعطي نحو 510 غم، والحصة ملعقة كبيرة (15 غم). هذه التي يطلبها الناس بالاسم.",
+ s:["جفّف الثوم تماماً واضربه مع الملح في محضّرة الطعام حتى يصير معجوناً، مع كشط الجوانب مرتين.",
+    "الآن القاعدة الوحيدة المهمة: أضف الزيت خيطاً رفيعاً، قطرة قطرة في البداية، والمحضّرة تعمل. الاستعجال هنا هو السبب الوحيد لانفصال التوم.",
+    "بعد ثلث كمية الزيت، بادل بينها — ملعقة عصير ليمون، ثم زيت، ثم ملعقة ماء مثلج، ثم زيت.",
+    "استمر حتى يصير أبيض وثخيناً ويحتفظ بشكله. وقت إضافة الزيت كله يجب أن يكون 8 إلى 10 دقائق.",
+    "أرِحه في الثلاجة ليلة كاملة. حدّة الثوم النيء تهدأ تماماً."],
+ w:"إذا انفصل لا ترمه. ابدأ وعاءً نظيفاً ببياض بيضة وأضف الصلصة المنفصلة إليه بنفس البطء."},
+26:{n:"صلصة الكوكتيل بأسلوب هارديز",b:"الصلصة الوردية للبرغر. تعطي نحو 275 غم، والحصة ملعقة كبيرة (15 غم).",
+ s:["اخفق كل شيء في وعاء حتى يصير ناعماً.",
+    "ذق ووجّهها حيث تحتاج — كاتشب أكثر للحلاوة، أو خل أكثر للحدّة.",
+    "برّدها ساعة على الأقل. بعد الخلط مباشرة يكون طعمها مثل مكوّناتها، وبعد ساعة يصير طعم صلصة واحدة."],
+ w:"ملعقة صغيرة من ماء المخلل بدل الخل تقرّبها أكثر من نسخة المطاعم."},
+27:{n:"صلصة البرغر الخاصة",b:"أثخن وأحمض من صلصة الكوكتيل، وفيها مخلل مفروم. تعطي نحو 230 غم.",
+ s:["صفّ المخلل جيداً — المخلل المائي يخفف الصلصة ولا تتعافى بعدها.",
+    "اخلط كل شيء حتى يتجانس.",
+    "برّدها ساعتين قبل الاستعمال."],
+ w:"خيار مخلل مفروم ناعماً بدل المخلل الجاهز إن كان هو المتوفر."},
+28:{n:"صلصة العسل والخردل",b:"النسخة الكاملة الدسم. تعطي نحو 230 غم، والحصة ملعقة كبيرة (15 غم).",
+ s:["اخفق الخردل مع العسل أولاً حتى لا يترسّب العسل.",
+    "أضف المايونيز بالخفق، ثم عصير الليمون.",
+    "ذقها. العسل يديرها والخردل يحدّها، والفلفل الحار يجب أن يبقى تحت حدّ الملاحظة بقليل."],
+ w:"نصف ديجون ونصف خردل حبّ يعطيها قواماً."},
+29:{n:"صلصة العسل والخردل الخفيفة",b:"نفس الدور بربع السعرات. تعطي نحو 230 غم.",
+ s:["اخفق العسل مع الخردل، ثم أضف اللبن وحرّك.",
+    "أضف عصير الليمون والملح واتركها 20 دقيقة — صلصات اللبن يكون طعمها باهتاً مباشرة بعد الخلط.",
+    "استعملها باردة. تتخثّر إذا سخّنتها."],
+ w:"استبدل 40 غم من اللبن بالمايونيز إن أردتها أدسم — تصير نحو 27 سعرة للملعقة."},
+30:{n:"صلصة الباربكيو المدخنة",b:"ثخينة وحلوة ورخيصة. تعطي نحو 285 غم.",
+ s:["حرّك كل شيء في قدر صغير على نار هادئة.",
+    "اتركها تغلي بهدوء 12 إلى 15 دقيقة مع التحريك أحياناً، حتى تغلّف ظهر الملعقة.",
+    "برّدها تماماً قبل تعبئتها — تثخن كثيراً وهي تبرد، فلا تختزلها أكثر من اللازم."],
+ w:"الستيفيا بدل السكر البني تنزلها إلى نحو 6 سعرات للملعقة، لكنها تفقد القوام اللزج."},
+31:{n:"صلصة الرانش",b:"بالأعشاب، قابلة للسكب، وأفضل من المعلّبة. تعطي نحو 260 غم.",
+ s:["اخفق المايونيز واللبن حتى ينعما، ثم خفّفهما بالحليب قليلاً قليلاً حتى تصير قابلة للسكب.",
+    "أضف الأعشاب المجففة والبهارات وحرّك.",
+    "أرِحها ساعة على الأقل. الأعشاب المجففة تحتاج هذا الوقت لتتشرّب، وإلا كان طعم الصلصة ترابياً."],
+ w:"شبت وبقدونس طازج بدل المجفف — استعمل ثلاثة أضعاف الكمية واستغنِ عن وقت الراحة."},
+32:{n:"مايونيز التشيبوتلي",b:"مدخّن وحار. تعطي نحو 200 غم.",
+ s:["حرّك معجون التشيبوتلي مع العسل أولاً.",
+    "أضف المايونيز وحرّك، ثم أضف عصير الليمون.",
+    "ذق الحرارة قبل إضافة معجون أكثر — ترتفع مع الوقت."],
+ w:"لا تشيبوتلي في دهوك؟ الهريسة مع نصف ملعقة صغيرة بابريكا مدخنة إضافية تقترب كثيراً."},
+33:{n:"صلصة الطحينة بالليمون",b:"تصلح للدجاج والسلطة واللفائف وكل شيء. تعطي نحو 225 غم.",
+ s:["اخفق الطحينة مع عصير الليمون. ستتماسك وتصير معجوناً قاسياً — هذا طبيعي، استمر.",
+    "أضف الماء البارد رشة رشة مع الخفق. ستنفتح وتصير كريمة ناعمة قابلة للسكب.",
+    "أضف الثوم والملح. خفّفها بماء أكثر إن أردتها تُسكب بدل أن تُغرف."],
+ w:"ملعقة كبيرة لبن تجعلها أخف طعماً وأفتح لوناً."},
+34:{n:"صلصة اللبن بالثوم",b:"ما تستعمله حين يكون التوم أكثر مما يسمح به يومك. تعطي نحو 235 غم.",
+ s:["اهرس الثوم مع الملح حتى يصير معجوناً — هذا يمنع قطع الثوم النيء من أن تصير حادة في الصلصة.",
+    "حرّكه في اللبن مع عصير الليمون والنعناع.",
+    "رشّ زيت الزيتون فوقها بدل خلطه فيها. تعطي إحساساً أدسم بنفس السعرات."],
+ w:"صفِّ اللبن في قماشة ساعة أولاً فتصير غموساً ثخيناً بدل صلصة."}
+},
+bw:{
+25:["يهذّب حدّة الثوم النيء دون أن يخفي الثوم نفسه","يحدّها دون إضافة سائل يفكّك الخليط"],
+26:["الشيء الوحيد الذي ينقص معظم النسخ البيتية","الحموضة التي في نسخة المطاعم ولا يعطيها الخل وحده","بودرة بدل البصل الطازج — لا تتخمّر ولا تمرّ في الثلاجة"],
+27:["عمق خلف طعم المخلل","ينعشها دون أن يخففها","يمنعها من تسييل الخبز"],
+28:["أساس مالح تحت حلاوة العسل","تجعلها تتعلّق بالدجاج بدل أن تنزلق عنه"],
+29:["الأنفع هنا — بلا سعرات، ويعيد الدسم الذي كان المايونيز يحمله","يعطي اللبن قواماً"],
+30:["عمق مالح لا يعطيه الكاتشب","المكوّن الوحيد الذي يجعل طعمها كالمطاعم","يثخّنها بلا اختزال طويل"],
+31:["الرانش المعلّب مليء بالغلوتامات — لهذا طعم نسختك أبهت","قابلة للسكب لكنها تتعلّق، بدل أن تكون مائية","ترفع الأعشاب المجففة"],
+32:["يحمل الدخان أبعد","فقط إذا كان معجون التشيبوتلي عندك خفيفاً"],
+33:["الطحينة تستقبل الأومامي بشكل ممتاز"],
+34:["عمق مجاني — هذه الصلصة أكثر المستفيدين، لأن لا دهون فيها تقوم بالدور"]
+}
+};
+</script>
+<script>
 /* ---------- storage: localStorage when the browser allows it, memory when it doesn't ---------- */
 const store = {
   live: (() => { try { localStorage.setItem("ck.probe","1"); localStorage.removeItem("ck.probe"); return true; } catch(e){ return false; } })(),
@@ -567,6 +949,78 @@ let toastTimer;
 function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"), 2200); }
 
 /* ---------- state ---------- */
+let lang = store.get("ck.lang", "en") === "ar" ? "ar" : "en";
+const isAR = () => lang === "ar";
+const tr = (k, en, vars) => t(k, en, vars);
+function t(key, en, vars){
+  let out = en;
+  if(isAR() && AR.ui[key] != null) out = AR.ui[key];
+  if(vars) Object.keys(vars).forEach(k => { out = out.split("{"+k+"}").join(vars[k]); });
+  return out;
+}
+const tCat = c => isAR() && AR.cat[c] ? AR.cat[c] : c;
+const tTime = s2 => !isAR() || !s2 ? s2 : s2.replace(/\bmins?\b/, "دقيقة").replace(/\bhrs?\b/, "ساعة");
+const AR_UNITS = [[/\btbsp\b/g,"ملعقة كبيرة"],[/\btsp each\b/g,"ملعقة صغيرة لكل واحد"],[/\btsp\b/g,"ملعقة صغيرة"],
+  [/\bml\b/g,"مل"],[/\bg\b/g,"غم"],[/\bdrops\b/g,"قطرات"],[/\bcloves\b/g,"فص ثوم"],[/\bclove\b/g,"فص ثوم"],
+  [/\blemon\b/g,"ليمونة"],[/\bpinch\b/g,"رشة"],[/\beach\b/g,"لكل واحد"]];
+function tAmount(a){
+  if(!isAR() || !a) return a;
+  if(a === "to taste") return "حسب الذوق";
+  let out = a.replace(/(^|\s)1\/2(\s|$)/g,"$1½$2").replace(/(^|\s)1\/4(\s|$)/g,"$1¼$2")
+             .replace(/(^|\s)1\/8(\s|$)/g,"$1⅛$2").replace(/(^|\s)3\/4(\s|$)/g,"$1¾$2");
+  AR_UNITS.forEach(u => { out = out.replace(u[0], u[1]); });
+  if(/^1 رشة$/.test(out)) out = "رشة";
+  return out;
+}
+/* a localised view of a recipe — English data untouched underneath */
+function L(r){
+  if(r.custom) return custView(r, lang);
+  if(!isAR()) return r;
+  const a = r.custom ? null : AR.r[r.id];
+  const bw = r.custom ? null : AR.bw[r.id];
+  return {
+    id:r.id, art:r.art, custom:r.custom, serves:r.serves, k:r.k, p:r.p, c:r.c, f:r.f,
+    tag: tCat(r.tag), tags: r.tags,
+    time: tTime(r.time),
+    name: a ? a.n : r.name,
+    blurb: a ? a.b : r.blurb,
+    swap: a ? a.w : r.swap,
+    steps: a ? a.s : r.steps,
+    keeps: r.keeps ? (AR.keeps[r.keeps] || r.keeps) : "",
+    ing: r.ing.map(i => [AR.ing[i[0]] || i[0], i[1]]),
+    boost: (r.boost||[]).map((b,ix) => [AR.ing[b[0]] || b[0], b[1], bw && bw[ix] ? bw[ix] : b[2]])
+  };
+}
+const i18nCache = new Map();
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = isAR() ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    if(!i18nCache.has(el)) i18nCache.set(el, el.innerHTML);
+    if(!isAR()){ el.innerHTML = i18nCache.get(el); return; }
+    const m = key.match(/^note(\d+)$/);
+    const val = m ? AR.ui.notes[+m[1]] : AR.ui[key];
+    if(val != null) el.textContent = val;
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+    const key = el.dataset.i18nPh;
+    if(!i18nCache.has(el)) i18nCache.set(el, el.placeholder);
+    el.placeholder = isAR() && AR.ui[key] != null ? AR.ui[key] : i18nCache.get(el);
+  });
+  const arrow = isAR() ? "→" : "←";
+  $("#backArrow").textContent = arrow; $("#fCancelArrow").textContent = arrow;
+  $("#langBtn").textContent = isAR() ? "English" : "العربية";
+  renderFilters(); paintCatList(); render(); gauge(); paintSavedNote(); refreshInstall();
+  if(current) paintSheet();
+  if(editing !== null || !$("#form").hidden) { /* form repaints on next open */ }
+}
+$("#langBtn").addEventListener("click", () => {
+  lang = isAR() ? "en" : "ar";
+  store.set("ck.lang", lang);
+  applyLang();
+});
+
 const BASE_CATS = ["Breakfast","Savory","Sauces","Dessert"];
 const TRAITS = ["High protein","Under 200","Batch prep","Coffee dipper","No bake","My recipes"];
 const RESERVED = ["All"].concat(BASE_CATS, TRAITS).map(x => x.toLowerCase());
@@ -591,7 +1045,7 @@ function renderFilters(){
   const list = ["All"].concat(allCats(), TRAITS);
   if(list.indexOf(active) === -1) active = "All";
   $("#filters").innerHTML = list.map(f =>
-    '<button class="chip" data-f="'+esc(f)+'" aria-pressed="'+(f===active)+'">'+esc(f)+'</button>').join("");
+    '<button class="chip" data-f="'+esc(f)+'" aria-pressed="'+(f===active)+'">'+esc(tCat(f))+'</button>').join("");
 }
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest(".chip"); if(!b) return;
@@ -610,21 +1064,21 @@ function render(){
   const rows = all().filter(matches);
   emptyEl.hidden = rows.length > 0;
   emptyEl.textContent = active === "My recipes"
-    ? "Nothing saved yet. Add a recipe and it lands here."
-    : "Nothing matches. Try a shorter word.";
-  $("#count").textContent = rows.length + (rows.length === 1 ? " recipe" : " recipes");
-  listEl.innerHTML = rows.map(r =>
-    '<li class="row">'+
+    ? t("emptyMine", "Nothing saved yet. Add a recipe and it lands here.")
+    : t("emptyNone", "Nothing matches. Try a shorter word.");
+  $("#count").textContent = rows.length + " " + (isAR() ? AR.ui.recipes : (rows.length === 1 ? "recipe" : "recipes"));
+  listEl.innerHTML = rows.map(raw => { const r = L(raw);
+    return '<li class="row">'+
       '<button class="row-main" data-open="'+r.id+'">'+
         '<span class="thumb">'+art(r.art)+'</span>'+
         '<span class="row-txt">'+
           '<span class="row-name">'+esc(r.name)+'</span>'+
-          '<span class="row-meta">'+esc(r.tag)+(r.time?' · '+esc(r.time):'')+' · '+r.p+' g protein'+(r.serves>1?' · makes '+r.serves:'')+(r.custom?' · yours':'')+'</span>'+
+          '<span class="row-meta">'+esc(r.tag)+(r.time?' · '+esc(r.time):'')+' · '+r.p+' '+t("proteinShort","g protein")+(r.serves>1?' · '+t("makes","makes {n}",{n:r.serves}):'')+(r.custom?' · '+t("yours","yours"):'')+'</span>'+
         '</span>'+
-        '<span class="row-k">'+r.k+'<i>kcal</i></span>'+
+        '<span class="row-k">'+r.k+'<i>'+t("kcal","kcal")+'</i></span>'+
       '</button>'+
-      '<button class="add '+(plate[r.id]?"on":"")+'" data-add="'+r.id+'" aria-label="'+(plate[r.id]?"Remove ":"Add ")+esc(r.name)+'">'+(plate[r.id]?"✓":"+")+'</button>'+
-    '</li>').join("");
+      '<button class="add '+(plate[r.id]?"on":"")+'" data-add="'+r.id+'" aria-label="'+esc(r.name)+'">'+(plate[r.id]?"✓":"+")+'</button>'+
+    '</li>'; }).join("");
 }
 listEl.addEventListener("click", e => {
   const open = e.target.closest("[data-open]"), add = e.target.closest("[data-add]");
@@ -647,13 +1101,15 @@ function totals(){
 function gauge(){
   const t = totals(), left = Math.round(TARGETS.kcal - t.k);
   $("#gKcal").textContent = Math.round(t.k);
-  $("#gTarget").textContent = TARGETS.kcal;
   $("#gBarK").style.width = Math.min(100, t.k/TARGETS.kcal*100) + "%";
   $("#gBarP").style.width = Math.min(100, t.p/TARGETS.protein*100) + "%";
-  $("#gProt").textContent = "Protein " + Math.round(t.p) + " / " + TARGETS.protein + " g";
+  $("#gProt").textContent = isAR() ? AR.ui.protein.split("{a}").join(Math.round(t.p)).split("{b}").join(TARGETS.protein)
+                                   : "Protein " + Math.round(t.p) + " / " + TARGETS.protein + " g";
   $("#gClear").hidden = t.k === 0;
-  $("#gNote").textContent = t.k === 0 ? "Tap + to build today's plate"
-    : left >= 0 ? left + " kcal still free" : Math.abs(left) + " kcal over target";
+  $("#gNote").textContent = t.k === 0 ? tr("tapPlus", "Tap + to build today's plate")
+    : left >= 0 ? tr("free", left + " kcal still free", {n:left})
+                : tr("over", Math.abs(left) + " kcal over target", {n:Math.abs(left)});
+  $("#gKcalUnit").textContent = tr("ofKcal", "/ {n} kcal", {n:TARGETS.kcal});
   $("#gNote").style.color = left < 0 ? "var(--toast)" : "";
 }
 $("#gClear").addEventListener("click", () => { plate = {}; savePlate(); render(); gauge(); if(current) paintSheetButton(); });
@@ -661,7 +1117,7 @@ $("#gClear").addEventListener("click", () => { plate = {}; savePlate(); render()
 /* ---------- categories ---------- */
 function paintCatList(){
   $("#catList").innerHTML =
-    BASE_CATS.map(c => '<span class="cattag builtin">'+esc(c)+'</span>').join("") +
+    BASE_CATS.map(c => '<span class="cattag builtin">'+esc(tCat(c))+'</span>').join("") +
     cats.map(c => '<span class="cattag">'+esc(c)+'<button data-cat="'+esc(c)+'" aria-label="Delete '+esc(c)+'">×</button></span>').join("");
 }
 $("#catList").addEventListener("click", e => {
@@ -669,7 +1125,7 @@ $("#catList").addEventListener("click", e => {
   const name = b.dataset.cat;
   const used = customs.filter(r => r.tag === name).length;
   if(used){
-    $("#catErr").textContent = name + " is still used by " + used + (used===1 ? " recipe" : " recipes") + ". Move them to another category first.";
+    $("#catErr").textContent = t("catUsed", name + " is still used by " + used + (used===1 ? " recipe" : " recipes") + ". Move them to another category first.", {n:name, c:used});
     return;
   }
   cats = cats.filter(c => c !== name);
@@ -679,16 +1135,16 @@ $("#catList").addEventListener("click", e => {
 function addCat(){
   const name = $("#catName").value.trim().replace(/\s+/g, " ");
   let err = "";
-  if(!name) err = "Type a name first.";
-  else if(name.length > 20) err = "Keep it under 20 characters.";
-  else if(RESERVED.indexOf(name.toLowerCase()) !== -1) err = name + " is already a filter.";
-  else if(cats.some(c => c.toLowerCase() === name.toLowerCase())) err = "You already have that one.";
+  if(!name) err = t("catEmpty", "Type a name first.");
+  else if(name.length > 20) err = t("catLong", "Keep it under 20 characters.");
+  else if(RESERVED.indexOf(name.toLowerCase()) !== -1) err = t("catTaken", name + " is already a filter.", {n:name});
+  else if(cats.some(c => c.toLowerCase() === name.toLowerCase())) err = t("catDup", "You already have that one.");
   $("#catErr").textContent = err;
   if(err) return;
   cats.push(name);
   $("#catName").value = "";
   saveCats(); render();
-  toast(name + " added");
+  toast(t("catAdded", name + " added", {n:name}));
 }
 $("#catAdd").addEventListener("click", addCat);
 $("#catName").addEventListener("keydown", e => { if(e.key === "Enter") addCat(); });
@@ -725,48 +1181,51 @@ function openSheet(id){
   document.body.style.overflow = "hidden";
 }
 function paintSheet(){
-  const r = current, n = sheetServes / (r.serves || 1);
+  const r = L(current), n = sheetServes / (r.serves || 1);
   $("#sTag").textContent = r.tag + (r.time ? " · " + r.time : "");
   $("#sBody").innerHTML =
     '<div class="banner">'+art(r.art)+'</div>'+
     '<h2>'+esc(r.name)+'</h2>'+
     (r.blurb ? '<p class="blurb">'+esc(r.blurb)+'</p>' : '')+
     '<div class="macros">'+
-      '<div class="macro"><b>'+r.k+'</b><span>kcal</span></div>'+
-      '<div class="macro"><b>'+r.p+'</b><span>protein g</span></div>'+
-      '<div class="macro"><b>'+r.c+'</b><span>carbs g</span></div>'+
-      '<div class="macro"><b>'+r.f+'</b><span>fat g</span></div>'+
+      '<div class="macro"><b>'+r.k+'</b><span>'+t("kcal","kcal")+'</span></div>'+
+      '<div class="macro"><b>'+r.p+'</b><span>'+t("proteinG","protein g")+'</span></div>'+
+      '<div class="macro"><b>'+r.c+'</b><span>'+t("carbsG","carbs g")+'</span></div>'+
+      '<div class="macro"><b>'+r.f+'</b><span>'+t("fatG","fat g")+'</span></div>'+
     '</div>'+
-    (r.keeps ? '<p class="keeps">Keeps '+esc(r.keeps)+'.</p>' : '')+
+    (r.keeps ? '<p class="keeps">'+t("keeps","Keeps {n}.",{n:esc(r.keeps)})+'</p>' : '')+
     '<div class="scaler">'+
-      '<span class="scaler-label">'+((r.serves||1)>1?"Batch size":"Servings")+' — macros above are per serving</span>'+
+      '<span class="scaler-label">'+((r.serves||1)>1?t("batch","Batch size"):t("servings","Servings"))+' — '+t("perServing","macros above are per serving")+'</span>'+
       '<button class="step" id="minus" aria-label="Fewer servings">−</button>'+
       '<span class="servnum">'+sheetServes+'</span>'+
       '<button class="step" id="plus" aria-label="More servings">+</button>'+
     '</div>'+
-    '<h3>Ingredients</h3>'+
-    '<ul class="ings">'+r.ing.map(i=>'<li><span>'+esc(i[0])+'</span><i>'+esc(scale(i[1],n))+'</i></li>').join("")+'</ul>'+
+    '<h3>'+t("ingredients","Ingredients")+'</h3>'+
+    '<ul class="ings">'+r.ing.map(i=>'<li><span>'+esc(i[0])+'</span><i>'+esc(tAmount(scale(i[1],n)))+'</i></li>').join("")+'</ul>'+
     (r.boost && r.boost.length ?
-      '<h3>Make it taste commercial</h3>'+
-      '<p class="optcap">All optional. Weigh them — MSG wants 0.3 to 0.5% of the sauce\'s weight, and past about 1% it turns metallic. Dissolve powders in the vinegar or juice before mixing.</p>'+
-      '<ul class="ings opt">'+r.boost.map(b=>'<li><span>'+esc(b[0])+(b[2]?'<em>'+esc(b[2])+'</em>':'')+'</span><i>'+esc(scale(b[1],n))+'</i></li>').join("")+'</ul>'
+      '<h3>'+t("boostTitle","Make it taste commercial")+'</h3>'+
+      '<p class="optcap">'+t("boostCap","All optional. Weigh them — MSG wants 0.3 to 0.5% of the sauce\'s weight, and past about 1% it turns metallic. Dissolve powders in the vinegar or juice before mixing.")+'</p>'+
+      '<ul class="ings opt">'+r.boost.map(b=>'<li><span>'+esc(b[0])+(b[2]?'<em>'+esc(b[2])+'</em>':'')+'</span><i>'+esc(tAmount(scale(b[1],n)))+'</i></li>').join("")+'</ul>'
       : '')+
-    '<h3>Method</h3>'+
+    '<h3>'+t("method","Method")+'</h3>'+
     '<ol class="steps">'+r.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol>'+
     (r.swap ? '<div class="swap">'+esc(r.swap)+'</div>' : '<div style="height:22px"></div>')+
     '<button class="sheet-add" id="sAdd"></button>'+
-    (r.custom ? '<div class="btnrow" style="margin:-30px 0 44px"><button class="ghost" id="sEdit">Edit recipe</button><button class="ghost danger" id="sDel">Delete</button></div>' : '');
+    '<div class="shareRow"><button id="sImg">'+t("shareCard","Share card")+'</button><button id="sTxt">'+t("shareText","Share as text")+'</button></div>'+
+    (r.custom ? '<div class="btnrow" style="margin:0 0 44px"><button class="ghost" id="sEdit">'+t("editRecipe","Edit recipe")+'</button><button class="ghost danger" id="sDel">'+t("del","Delete")+'</button></div>' : '<div style="height:30px"></div>');
   const inc = (r.serves || 1) >= 12 ? Math.ceil(r.serves / 2) : 1;
   $("#minus").onclick = () => { if(sheetServes - inc >= inc){ sheetServes -= inc; paintSheet(); } };
   $("#plus").onclick  = () => { if(sheetServes + inc <= (r.serves || 1) * 4){ sheetServes += inc; paintSheet(); } };
   $("#sAdd").onclick  = () => toggle(r.id);
+  $("#sImg").onclick  = () => shareCard(r);
+  $("#sTxt").onclick  = () => shareText(r);
   if(r.custom){
-    $("#sEdit").onclick = () => { closeSheet(); openForm(r); };
+    $("#sEdit").onclick = () => { const raw = current; closeSheet(); openForm(raw); };
     $("#sDel").onclick  = () => {
-      if(!confirm("Delete " + r.name + "? This can't be undone.")) return;
+      if(!confirm(t("confirmDel", "Delete " + r.name + "? This can't be undone.", {n:r.name}))) return;
       customs = customs.filter(x => x.id !== r.id);
       delete plate[r.id];
-      saveCustoms(); savePlate(); closeSheet(); render(); gauge(); toast("Recipe deleted");
+      saveCustoms(); savePlate(); closeSheet(); render(); gauge(); toast(t("deleted","Recipe deleted"));
     };
   }
   paintSheetButton();
@@ -774,65 +1233,139 @@ function paintSheet(){
 function paintSheetButton(){
   const b = $("#sAdd"); if(!b || !current) return;
   const on = !!plate[current.id];
-  b.textContent = on ? "Remove from today" : "Add " + current.k + " kcal to today";
+  b.textContent = on ? t("removeToday","Remove from today") : t("addToday","Add " + current.k + " kcal to today", {n:current.k});
   b.classList.toggle("on", on);
 }
 $("#back").addEventListener("click", closeSheet);
 function closeSheet(){ $("#sheet").classList.remove("open"); document.body.style.overflow = ""; current = null; }
 
-/* ---------- recipe editor ---------- */
+/* ---------- recipe editor: text per language, numbers shared ---------- */
+const TXF = ["name","blurb","time","keeps","swap"];
+function emptyTx(){ return {name:"",blurb:"",time:"",keeps:"",swap:"",ing:[],steps:[],boost:[]}; }
+const has = v => v != null && (Array.isArray(v) ? v.length > 0 : String(v).trim().length > 0);
+
+/* resolve a custom recipe's text for one language, falling back to the other side */
+function custView(r, lg){
+  const other = lg === "ar" ? "en" : "ar";
+  const tx = r.tx || {};
+  const pick = k => {
+    if(tx[lg] && has(tx[lg][k])) return tx[lg][k];
+    if(tx[other] && has(tx[other][k])) return tx[other][k];
+    return r[k];
+  };
+  return {
+    id:r.id, art:r.art, custom:true, serves:r.serves, k:r.k, p:r.p, c:r.c, f:r.f,
+    tag:tCat(r.tag), tags:r.tags,
+    name:pick("name") || "", blurb:pick("blurb") || "", time:pick("time") || "",
+    keeps:pick("keeps") || "", swap:pick("swap") || "",
+    ing:pick("ing") || [], steps:pick("steps") || [], boost:pick("boost") || []
+  };
+}
+
+let draft = null, formLang = "en";
+
 $("#newRecipe").addEventListener("click", () => openForm(null));
 $("#fCancel").addEventListener("click", closeForm);
-function closeForm(){ $("#form").classList.remove("open"); document.body.style.overflow = ""; editing = null; }
+function closeForm(){
+  $("#form").classList.remove("open");
+  document.body.style.overflow = "";
+  editing = null; draft = null;
+}
 
 function openForm(rec){
   editing = rec || null;
-  formArt = rec ? rec.art : "bowl";
+  formLang = lang;
+  const tx = (rec && rec.tx) || {};
+  draft = {
+    art: rec ? rec.art : "bowl",
+    tag: rec ? rec.tag : allCats()[0],
+    serves: rec ? rec.serves : 1,
+    k: rec ? rec.k : "", p: rec ? rec.p : "", c: rec ? rec.c : "", f: rec ? rec.f : "",
+    en: Object.assign(emptyTx(), tx.en || {}),
+    ar: Object.assign(emptyTx(), tx.ar || {})
+  };
+  /* a recipe saved before this feature has flat fields only — seed the side that has content */
+  if(rec && !rec.tx){
+    const side = /[\u0600-\u06FF]/.test(String(rec.name || "")) ? "ar" : "en";
+    draft[side] = { name:rec.name||"", blurb:rec.blurb||"", time:rec.time||"", keeps:rec.keeps||"",
+                    swap:rec.swap||"", ing:rec.ing||[], steps:rec.steps||[], boost:rec.boost||[] };
+  }
+  formArt = draft.art;
   paintForm();
   $("#form").classList.add("open"); $("#form").scrollTop = 0;
   document.body.style.overflow = "hidden";
 }
+
+function readForm(){
+  if(!draft || !$("#fName")) return;
+  const num = (id, d) => { const v = parseFloat($(id).value); return isNaN(v) ? d : v; };
+  draft.art = formArt;
+  draft.tag = $("#fTag").value;
+  draft.serves = Math.max(1, Math.round(num("#fServes", 1)));
+  draft.k = $("#fK").value === "" ? "" : num("#fK", "");
+  draft.p = num("#fP", 0); draft.c = num("#fC", 0); draft.f = num("#fF", 0);
+  const d = draft[formLang];
+  TXF.forEach(k => { d[k] = $("#f" + k.charAt(0).toUpperCase() + k.slice(1)).value.trim(); });
+  d.ing = $("#fIng").value.split("\n").map(l => l.trim()).filter(Boolean)
+    .map(l => { const i = l.indexOf("|"); return i === -1 ? [l, ""] : [l.slice(0,i).trim(), l.slice(i+1).trim()]; });
+  d.steps = $("#fSteps").value.split("\n").map(l => l.trim()).filter(Boolean);
+  d.boost = $("#fBoost").value.split("\n").map(l => l.trim()).filter(Boolean)
+    .map(l => { const q = l.split("|").map(x => x.trim()); return [q[0]||"", q[1]||"", q[2]||""]; });
+}
+
 function paintForm(){
-  const r = editing || {};
-  $("#fTitle").textContent = editing ? "Editing your recipe" : "New recipe";
-  const inp = (id,label,val,type,ph) =>
+  const d = draft[formLang], rtlSide = formLang === "ar";
+  const dirAttr = ' dir="' + (rtlSide ? "rtl" : "ltr") + '"';
+  $("#fTitle").textContent = editing ? t("fEdit","Editing your recipe") : t("fNew","New recipe");
+  const inp = (id,label,val,type,ph,dir) =>
     '<label class="field"><span>'+label+'</span><input id="'+id+'" type="'+(type||"text")+'"'+
-    (type==="number"?' inputmode="decimal"':'')+' value="'+esc(val==null?"":val)+'" placeholder="'+esc(ph||"")+'"></label>';
+    (type==="number"?' inputmode="decimal"':'')+(dir||'')+' value="'+esc(val==null?"":val)+'" placeholder="'+esc(ph||"")+'"></label>';
+
   $("#fBody").innerHTML =
     '<div class="banner" id="fBanner">'+art(formArt)+'</div>'+
-    '<h2 style="margin-bottom:14px">'+(editing ? "Edit recipe" : "Your recipe")+'</h2>'+
+    '<h2 style="margin-bottom:14px">'+(editing ? t("fEditH","Edit recipe") : t("fNewH","Your recipe"))+'</h2>'+
     '<p class="ferr" id="fErr"></p>'+
-    '<div class="fone">'+inp("fName","Name", r.name, "text", "Grilled halloumi salad")+'</div>'+
-    '<div class="fone"><label class="field"><span>Picture</span></label>'+
+
+    '<p class="seclabel">'+t("shared","Shared by both languages")+'</p>'+
+    '<div class="fone"><label class="field"><span>'+t("fPic","Picture")+'</span></label>'+
       '<div class="artpick" id="fArt">'+Object.keys(ART).map(k =>
         '<button type="button" class="artbtn" data-art="'+k+'" aria-pressed="'+(k===formArt)+'" aria-label="'+k+'">'+art(k)+'</button>').join("")+'</div></div>'+
     '<div class="fgrid">'+
-      '<label class="field"><span>Category</span><select id="fTag">'+
-        allCats().map(t=>'<option'+(r.tag===t?" selected":"")+'>'+esc(t)+'</option>').join("")+
+      '<label class="field"><span>'+t("fCat","Category")+'</span><select id="fTag">'+
+        allCats().map(c=>'<option value="'+esc(c)+'"'+(draft.tag===c?" selected":"")+'>'+esc(tCat(c))+'</option>').join("")+
       '</select></label>'+
-      inp("fTime","Time", r.time, "text", "20 min")+
-    '</div>'+
-    '<div class="fgrid">'+
-      inp("fServes","Makes (servings)", r.serves || 1, "number")+
-      inp("fKeeps","Keeps", r.keeps, "text", "4 days refrigerated")+
+      inp("fServes",t("fServes","Makes (servings)"), draft.serves, "number")+
     '</div>'+
     '<div class="fgrid4">'+
-      inp("fK","kcal", r.k, "number")+ inp("fP","protein g", r.p, "number")+
-      inp("fC","carbs g", r.c, "number")+ inp("fF","fat g", r.f, "number")+
+      inp("fK",t("kcal","kcal"), draft.k, "number")+ inp("fP",t("proteinG","protein g"), draft.p, "number")+
+      inp("fC",t("carbsG","carbs g"), draft.c, "number")+ inp("fF",t("fatG","fat g"), draft.f, "number")+
     '</div>'+
-    '<p class="phint" style="margin-top:-4px">Per serving, not per batch.</p>'+
-    '<div class="fone">'+inp("fBlurb","One-line note", r.blurb, "text", "What makes it worth cooking")+'</div>'+
-    '<div class="fone"><label class="field"><span>Ingredients — one per line, name then a vertical bar then the amount</span>'+
-      '<textarea id="fIng" placeholder="Coconut flour | 28 g&#10;Eggs | 2&#10;Cinnamon | 1 tsp">'+
-      esc((r.ing||[]).map(i=>i[0]+" | "+i[1]).join("\n"))+'</textarea></label></div>'+
-    '<div class="fone"><label class="field"><span>Method — one step per line</span>'+
-      '<textarea id="fSteps" placeholder="Heat the oven to 180°C.&#10;Mix everything and rest 5 minutes.">'+
-      esc((r.steps||[]).join("\n"))+'</textarea></label></div>'+
-    '<div class="fone"><label class="field"><span>Optional extras (optional) — name | amount | why</span>'+
-      '<textarea id="fBoost" placeholder="MSG | 1 g | savory depth&#10;Xanthan gum | 0.4 g | keeps it from running">'+
-      esc((r.boost||[]).map(b=>[b[0],b[1],b[2]||""].join(" | ")).join("\n"))+'</textarea></label></div>'+
-    '<div class="fone">'+inp("fSwap","Tip or swap (optional)", r.swap, "text", "")+'</div>'+
-    '<button class="sheet-add" id="fSave">'+(editing ? "Save changes" : "Save recipe")+'</button>';
+    '<p class="phint" style="margin-top:-4px">'+t("fPerServing","Per serving, not per batch.")+'</p>'+
+
+    '<p class="seclabel">'+t("textFor","Text in {n}", {n: formLang === "ar" ? t("tabAr","العربية") : t("tabEn","English")})+'</p>'+
+    '<div class="tabs" id="fTabs">'+
+      '<button type="button" class="tab" data-lg="en" aria-pressed="'+(formLang==="en")+'">'+t("tabEn","English")+'</button>'+
+      '<button type="button" class="tab" data-lg="ar" aria-pressed="'+(formLang==="ar")+'">'+t("tabAr","العربية")+'</button>'+
+    '</div>'+
+    '<p class="phint">'+t("tabHint","Fill in one side or both. Leave a side blank and the other one shows in its place.")+'</p>'+
+
+    '<div class="fone">'+inp("fName",t("fName","Name"), d.name, "text", t("fNamePh","Grilled halloumi salad"), dirAttr)+'</div>'+
+    '<div class="fgrid">'+
+      inp("fTime",t("fTime","Time"), d.time, "text", t("fTimePh","20 min"), dirAttr)+
+      inp("fKeeps",t("fKeeps","Keeps"), d.keeps, "text", t("fKeepsPh","4 days refrigerated"), dirAttr)+
+    '</div>'+
+    '<div class="fone">'+inp("fBlurb",t("fBlurb","One-line note"), d.blurb, "text", t("fBlurbPh","What makes it worth cooking"), dirAttr)+'</div>'+
+    '<div class="fone"><label class="field"><span>'+t("fIng","Ingredients — one per line, name then a vertical bar then the amount")+'</span>'+
+      '<textarea id="fIng"'+dirAttr+' placeholder="'+esc(t("fIngPh","Coconut flour | 28 g\nEggs | 2\nCinnamon | 1 tsp"))+'">'+
+      esc((d.ing||[]).map(i=>i[0]+" | "+i[1]).join("\n"))+'</textarea></label></div>'+
+    '<div class="fone"><label class="field"><span>'+t("fSteps","Method — one step per line")+'</span>'+
+      '<textarea id="fSteps"'+dirAttr+' placeholder="'+esc(t("fStepsPh","Heat the oven to 180°C.\nMix everything and rest 5 minutes."))+'">'+
+      esc((d.steps||[]).join("\n"))+'</textarea></label></div>'+
+    '<div class="fone"><label class="field"><span>'+t("fBoost","Optional extras — name | amount | why")+'</span>'+
+      '<textarea id="fBoost"'+dirAttr+' placeholder="'+esc(t("fBoostPh","MSG | 1 g | savory depth"))+'">'+
+      esc((d.boost||[]).map(b=>[b[0],b[1],b[2]||""].join(" | ")).join("\n"))+'</textarea></label></div>'+
+    '<div class="fone">'+inp("fSwap",t("fSwap","Tip or swap (optional)"), d.swap, "text", "", dirAttr)+'</div>'+
+    '<button class="sheet-add" id="fSave">'+(editing ? t("fSaveEdit","Save changes") : t("fSave","Save recipe"))+'</button>';
 
   $("#fArt").addEventListener("click", e => {
     const b = e.target.closest(".artbtn"); if(!b) return;
@@ -840,53 +1373,56 @@ function paintForm(){
     document.querySelectorAll(".artbtn").forEach(x => x.setAttribute("aria-pressed", x.dataset.art===formArt));
     $("#fBanner").innerHTML = art(formArt);
   });
+  $("#fTabs").addEventListener("click", e => {
+    const b = e.target.closest(".tab"); if(!b || b.dataset.lg === formLang) return;
+    readForm();
+    formLang = b.dataset.lg;
+    const keep = $("#form").scrollTop;
+    paintForm();
+    $("#form").scrollTop = keep;
+  });
   $("#fSave").onclick = saveForm;
 }
+
 function saveForm(){
-  const num = (id, d) => { const v = parseFloat($(id).value); return isNaN(v) ? d : v; };
-  const name = $("#fName").value.trim();
-  const k = num("#fK", NaN);
-  const ing = $("#fIng").value.split("\n").map(l => l.trim()).filter(Boolean)
-    .map(l => { const i = l.indexOf("|"); return i === -1 ? [l, ""] : [l.slice(0,i).trim(), l.slice(i+1).trim()]; });
-  const steps = $("#fSteps").value.split("\n").map(l => l.trim()).filter(Boolean);
-  const boost = $("#fBoost").value.split("\n").map(l => l.trim()).filter(Boolean)
-    .map(l => { const parts = l.split("|").map(x => x.trim()); return [parts[0]||"", parts[1]||"", parts[2]||""]; });
+  readForm();
+  const side = has(draft[formLang].name) ? formLang : (formLang === "en" ? "ar" : "en");
+  const main = draft[side];
 
   let err = "";
-  if(!name) err = "Give the recipe a name.";
-  else if(isNaN(k) || k <= 0) err = "Calories per serving is needed — the day tracker runs on it.";
-  else if(!ing.length) err = "Add at least one ingredient.";
+  if(!has(draft.en.name) && !has(draft.ar.name)) err = t("errName","Give the recipe a name.");
+  else if(draft.k === "" || isNaN(draft.k) || draft.k <= 0) err = t("errK","Calories per serving is needed — the day tracker runs on it.");
+  else if(!has(draft.en.ing) && !has(draft.ar.ing)) err = t("errIng","Add at least one ingredient.");
   if(err){ $("#fErr").textContent = err; $("#form").scrollTop = 0; return; }
 
-  const tag = $("#fTag").value;
-  const serves = Math.max(1, Math.round(num("#fServes", 1)));
-  const p = num("#fP", 0);
-  const tags = [tag, "My recipes"];
-  if(p >= 20) tags.push("High protein");
-  if(k < 200) tags.push("Under 200");
-  if(serves >= 4) tags.push("Batch prep");
+  const tags = [draft.tag, "My recipes"];
+  if(draft.p >= 20) tags.push("High protein");
+  if(draft.k < 200) tags.push("Under 200");
+  if(draft.serves >= 4) tags.push("Batch prep");
 
   const rec = {
     id: editing ? editing.id : "c" + Date.now(),
-    custom: true, art: formArt, name: name, tag: tag, tags: tags,
-    time: $("#fTime").value.trim(), serves: serves,
-    k: Math.round(k), p: p, c: num("#fC", 0), f: num("#fF", 0),
-    blurb: $("#fBlurb").value.trim(), keeps: $("#fKeeps").value.trim(),
-    ing: ing, boost: boost, steps: steps, swap: $("#fSwap").value.trim()
+    custom: true, art: draft.art, tag: draft.tag, tags: tags, serves: draft.serves,
+    k: Math.round(draft.k), p: draft.p, c: draft.c, f: draft.f,
+    tx: { en: draft.en, ar: draft.ar },
+    /* flat copies so older backups and any non-bilingual code still read fine */
+    name: main.name, blurb: main.blurb, time: main.time, keeps: main.keeps,
+    swap: main.swap, ing: main.ing, steps: main.steps, boost: main.boost
   };
   if(editing){ customs = customs.map(x => x.id === editing.id ? rec : x); }
   else { customs.push(rec); }
   saveCustoms(); closeForm(); render(); gauge();
-  toast(editing ? "Changes saved" : "Recipe saved");
+  toast(editing ? t("savedEdit","Changes saved") : t("saved","Recipe saved"));
 }
 
 /* ---------- backup ---------- */
 function paintSavedNote(){
   const n = customs.length;
   $("#savedNote").textContent =
-    (n === 0 ? "No recipes of your own yet." : n + (n===1 ? " recipe" : " recipes") + " saved on this device.") +
-    (store.live ? " Your day and your recipes are saved here and survive a refresh."
-                : " This browser is blocking storage, so nothing will survive a refresh — download the file and open it directly to fix that.");
+    (n === 0 ? t("mineNone", "No recipes of your own yet.")
+             : t("mineCount", n + (n===1 ? " recipe" : " recipes") + " saved on this device.", {n:n})) +
+    (store.live ? t("storeOk", " Your day and your recipes are saved here and survive a refresh.")
+                : t("storeNo", " This browser is blocking storage, so nothing will survive a refresh — download the file and open it directly to fix that."));
 }
 $("#expBtn").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify({v:1, customs:customs, targets:TARGETS}, null, 2)], {type:"application/json"});
@@ -894,7 +1430,7 @@ $("#expBtn").addEventListener("click", () => {
   a.href = URL.createObjectURL(blob);
   a.download = "coconut-kitchen-backup-" + todayKey() + ".json";
   a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-  toast("Backup downloaded");
+  toast(t("backupDone", "Backup downloaded"));
 });
 $("#impBtn").addEventListener("click", () => $("#impFile").click());
 $("#impFile").addEventListener("change", e => {
@@ -910,8 +1446,8 @@ $("#impFile").addEventListener("change", e => {
       if(data.targets){ TARGETS = Object.assign(TARGETS, data.targets); store.set("ck.targets", TARGETS);
         $("#tK").value = TARGETS.kcal; $("#tP").value = TARGETS.protein; }
       saveCustoms(); render(); gauge();
-      toast(added + (added===1 ? " recipe added" : " recipes added"));
-    } catch(err){ toast("That file isn't a backup"); }
+      toast(added === 1 ? t("added1", "1 recipe added") : t("addedN", added + " recipes added", {n:added}));
+    } catch(err){ toast(t("badFile", "That file isn't a backup")); }
     e.target.value = "";
   };
   reader.readAsText(file);
@@ -926,31 +1462,35 @@ document.addEventListener("keydown", e => {
 /* ---------- install as an app ---------- */
 let deferredPrompt = null;
 const panel = $("#installPanel"), btn = $("#installBtn"), hint = $("#installHint"), ititle = $("#installTitle");
-const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+const standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
 const ua = navigator.userAgent;
 const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
 const isFile = location.protocol === "file:";
 
+let installState = null;
 function showInstall(state){
+  installState = state;
   panel.hidden = false;
+  btn.textContent = t("install","Install");
   if(state === "ready"){
-    ititle.textContent = "Install it as an app";
-    hint.textContent = "Adds Coconut Kitchen to your home screen. Opens full screen, no address bar, and works with no connection.";
+    ititle.textContent = t("installTitle","Install it as an app");
+    hint.textContent = t("installReady","Adds Coconut Kitchen to your home screen. Opens full screen, no address bar, and works with no connection.");
     btn.hidden = false;
   } else if(state === "file"){
-    ititle.textContent = "Can't install from a downloaded file";
-    hint.textContent = "Chrome only installs pages served over https. Put this folder on GitHub Pages or any free static host, open that link, and the Install button appears here.";
+    ititle.textContent = t("installFileTitle","Can't install from a downloaded file");
+    hint.textContent = t("installFile","Chrome only installs pages served over https. Put this folder on GitHub Pages or any free static host, open that link, and the Install button appears here.");
     btn.hidden = true;
   } else if(state === "ios"){
-    ititle.textContent = "Install it as an app";
-    hint.textContent = "In Safari, tap the Share button, then Add to Home Screen.";
+    ititle.textContent = t("installTitle","Install it as an app");
+    hint.textContent = t("installIos","In Safari, tap the Share button, then Add to Home Screen.");
     btn.hidden = true;
   } else {
-    ititle.textContent = "Install it as an app";
-    hint.textContent = "In Chrome, open the ⋮ menu and tap Add to home screen. If it's missing, reload the page once and try again.";
+    ititle.textContent = t("installTitle","Install it as an app");
+    hint.textContent = t("installManual","In Chrome, open the ⋮ menu and tap Add to home screen. If it's missing, reload the page once and try again.");
     btn.hidden = true;
   }
 }
+function refreshInstall(){ if(installState && !panel.hidden) showInstall(installState); }
 
 if(standalone){
   panel.hidden = true;
@@ -975,21 +1515,211 @@ btn.addEventListener("click", async () => {
   const choice = await deferredPrompt.userChoice;
   deferredPrompt = null;
   btn.disabled = false;
-  if(choice.outcome === "accepted"){ panel.hidden = true; toast("Installing"); }
+  if(choice.outcome === "accepted"){ panel.hidden = true; toast(t("installing","Installing")); }
   else { showInstall("manual"); }
 });
 
 window.addEventListener("appinstalled", () => {
   deferredPrompt = null;
   panel.hidden = true;
-  toast("Installed — open it from your home screen");
+  toast(t("installed","Installed — open it from your home screen"));
 });
 
 if("serviceWorker" in navigator && !isFile){
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
 }
 
-paintSavedNote(); paintCatList(); renderFilters(); render(); gauge();
+
+/* ---------- share: a printable card image, or clean text ---------- */
+const CC = {bg:"#0F2E24", panel:"#0A211A", line:"#1E4739", cream:"#F4EFE2", dim:"#A9B8AE", toast:"#E8A33D", mint:"#7FC9A8", char:"#12241D"};
+function svgDataUrl(kind){
+  const css = '<style>.a1{fill:#E8A33D}.a2{fill:#7FC9A8}.a3{fill:#F4EFE2}.a4{fill:#173A2E}'+
+    '.s1{fill:none;stroke:#0A211A;stroke-width:3;stroke-linecap:round}.s2{fill:none;stroke:#E8A33D;stroke-width:3.5;stroke-linecap:round}</style>';
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="260" height="260">'+css+(ART[kind]||ART.bowl)+'</svg>';
+  return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg)));
+}
+function loadImg(src){ return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
+
+async function buildCard(raw){
+  const r = L(raw), rtl = isAR(), W = 1080, PAD = 76, INNER = W - PAD*2;
+  const fam  = rtl ? '"Cairo",sans-serif' : '"Inter",sans-serif';
+  const disp = rtl ? '"Cairo",sans-serif' : '"Fraunces",Georgia,serif';
+  try { if(document.fonts){ await document.fonts.load('800 60px ' + disp); await document.fonts.load('400 32px ' + fam); await document.fonts.ready; } } catch(e){}
+  const icon = await loadImg(svgDataUrl(r.art));
+
+  const mm = document.createElement("canvas").getContext("2d");
+  mm.direction = rtl ? "rtl" : "ltr";
+  const ops = []; let y = PAD;
+
+  function wrap(text, font, maxW){
+    mm.font = font;
+    const words = String(text).split(/\s+/), lines = []; let line = "";
+    for(const w of words){
+      const test = line ? line + " " + w : w;
+      if(mm.measureText(test).width > maxW && line){ lines.push(line); line = w; } else line = test;
+    }
+    if(line) lines.push(line);
+    return lines;
+  }
+  function para(text, font, color, lineH, maxW, indent){
+    wrap(text, font, maxW || INNER).forEach(l => {
+      ops.push({k:"text", s:l, font, color, y:y + lineH*0.74, indent:indent||0});
+      y += lineH;
+    });
+  }
+  function heading(text){
+    y += 30;
+    ops.push({k:"text", s:text, font:'700 27px ' + fam, color:CC.mint, y:y + 22});
+    y += 52;
+  }
+
+  // icon
+  ops.push({k:"round", x:(W-260)/2, y:y, w:260, h:260, r:34, fill:CC.panel});
+  ops.push({k:"img", img:icon, x:(W-260)/2, y:y, w:260, h:260});
+  y += 260 + 46;
+
+  para(r.name, '800 62px ' + disp, CC.cream, 76);
+  y += 6;
+  if(r.blurb) para(r.blurb, '400 32px ' + fam, CC.dim, 46);
+  y += 24;
+
+  // macro strip
+  const mh = 148;
+  ops.push({k:"round", x:PAD, y:y, w:INNER, h:mh, r:22, fill:CC.panel});
+  const cells = [[r.k, t("kcal","kcal"), CC.toast],[r.p, t("proteinG","protein g"), CC.cream],
+                 [r.c, t("carbsG","carbs g"), CC.cream],[r.f, t("fatG","fat g"), CC.cream]];
+  cells.forEach((c, i) => {
+    const cx = PAD + INNER*(i + 0.5)/4;
+    ops.push({k:"center", s:String(c[0]), font:'800 48px ' + disp, color:c[2], x:cx, y:y + 66});
+    ops.push({k:"center", s:c[1], font:'400 24px ' + fam, color:CC.dim, x:cx, y:y + 108});
+    if(i) ops.push({k:"rect", x:PAD + INNER*i/4, y:y + 28, w:2, h:mh - 56, fill:CC.line});
+  });
+  y += mh + 10;
+  const sub = [r.time, (r.serves > 1 ? t("makes","makes {n}",{n:r.serves}) : ""), r.keeps ? t("keeps","Keeps {n}.",{n:r.keeps}) : ""].filter(Boolean).join("  ·  ");
+  if(sub){ y += 22; para(sub, '400 26px ' + fam, CC.dim, 38); }
+
+  heading(t("ingredients","Ingredients"));
+  r.ing.forEach(i => {
+    ops.push({k:"pair", a:i[0], b:tAmount(i[1]), font:'400 31px ' + fam, y:y + 24});
+    y += 50;
+    ops.push({k:"rect", x:PAD, y:y - 12, w:INNER, h:1, fill:"#193A2E"});
+  });
+
+  if(r.boost && r.boost.length){
+    heading(t("boostTitle","Make it taste commercial"));
+    r.boost.forEach(b => {
+      ops.push({k:"pair", a:b[0], b:tAmount(b[1]), font:'400 31px ' + fam, y:y + 24, cB:CC.mint});
+      y += 46;
+      if(b[2]) para(b[2], '400 25px ' + fam, CC.dim, 36, INNER - 40, 20);
+      y += 12;
+    });
+  }
+
+  heading(t("method","Method"));
+  r.steps.forEach((st, i) => {
+    ops.push({k:"text", s:String(i+1), font:'800 30px ' + disp, color:CC.toast, y:y + 33});
+    para(st, '400 31px ' + fam, CC.cream, 45, INNER - 56, 56);
+    y += 18;
+  });
+
+  if(r.swap){
+    y += 16;
+    const start = y;
+    para(r.swap, '400 28px ' + fam, "#D6DFD8", 42, INNER - 56, 34);
+    ops.push({k:"rect", x:rtl ? W - PAD - 5 : PAD, y:start - 6, w:5, h:y - start + 12, fill:CC.toast});
+    y += 14;
+  }
+
+  y += 40;
+  ops.push({k:"rect", x:PAD, y:y, w:INNER, h:1, fill:CC.line});
+  y += 34;
+  ops.push({k:"pair", a:t("brand","Coconut Kitchen"), b:String(r.k) + " " + t("kcal","kcal"), font:'700 28px ' + fam, y:y + 22, cA:CC.cream, cB:CC.dim});
+  y += 40 + PAD;
+
+  // draw
+  const cv = document.createElement("canvas");
+  cv.width = W; cv.height = Math.round(y);
+  const c = cv.getContext("2d");
+  c.fillStyle = CC.bg; c.fillRect(0, 0, W, cv.height);
+  c.direction = rtl ? "rtl" : "ltr";
+  const S = rtl ? W - PAD : PAD, E = rtl ? PAD : W - PAD;
+  ops.forEach(o => {
+    if(o.k === "rect"){ c.fillStyle = o.fill; c.fillRect(o.x, o.y, o.w, o.h); }
+    else if(o.k === "round"){ c.fillStyle = o.fill; c.beginPath(); c.roundRect(o.x, o.y, o.w, o.h, o.r); c.fill(); }
+    else if(o.k === "img"){ c.drawImage(o.img, o.x, o.y, o.w, o.h); }
+    else if(o.k === "center"){ c.font = o.font; c.fillStyle = o.color; c.textAlign = "center"; c.fillText(o.s, o.x, o.y); }
+    else if(o.k === "text"){
+      c.font = o.font; c.fillStyle = o.color; c.textAlign = rtl ? "right" : "left";
+      c.fillText(o.s, rtl ? S - (o.indent||0) : S + (o.indent||0), o.y);
+    }
+    else if(o.k === "pair"){
+      c.font = o.font; c.textAlign = rtl ? "right" : "left";
+      c.fillStyle = o.cA || CC.cream; c.fillText(o.a, S, o.y);
+      c.textAlign = rtl ? "left" : "right";
+      c.fillStyle = o.cB || CC.toast; c.fillText(o.b, E, o.y);
+    }
+  });
+  return cv;
+}
+
+function safeName(n){ return String(n).replace(/[^\w\u0600-\u06FF]+/g, "-").replace(/^-|-$/g, "") || "recipe"; }
+
+async function shareCard(raw){
+  toast(t("sharing", "Building the card…"));
+  let cv;
+  try { cv = await buildCard(raw); } catch(e){ toast(t("shareFail","Couldn't build the card")); return; }
+  cv.toBlob(async blob => {
+    if(!blob){ toast(t("shareFail","Couldn't build the card")); return; }
+    const file = new File([blob], safeName(L(raw).name) + ".png", {type:"image/png"});
+    try {
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:L(raw).name});
+        return;
+      }
+    } catch(e){ if(e && e.name === "AbortError") return; }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    toast(t("shareSaved", "Card saved as an image"));
+  }, "image/png");
+}
+
+function recipeText(raw){
+  const r = L(raw), nl = "\n";
+  let out = r.name + nl;
+  if(r.blurb) out += r.blurb + nl;
+  out += nl + r.k + " " + t("kcal","kcal") + "  ·  " + r.p + " " + t("proteinU","g protein") +
+         "  ·  " + r.c + " " + t("carbsU","g carbs") + "  ·  " + r.f + " " + t("fatU","g fat") + nl;
+  if(r.serves > 1 && r.serves <= 12) out += t("makes","makes {n}", {n:r.serves}) + nl;
+  out += nl + t("ingredients","Ingredients").toUpperCase() + nl;
+  r.ing.forEach(i => { out += "• " + i[0] + " — " + tAmount(i[1]) + nl; });
+  if(r.boost && r.boost.length){
+    out += nl + t("boostTitle","Make it taste commercial").toUpperCase() + nl;
+    r.boost.forEach(b => { out += "• " + b[0] + " — " + tAmount(b[1]) + nl; });
+  }
+  out += nl + t("method","Method").toUpperCase() + nl;
+  r.steps.forEach((st, i) => { out += (i+1) + ". " + st + nl; });
+  if(r.swap) out += nl + r.swap + nl;
+  if(r.keeps) out += nl + t("keeps","Keeps {n}.", {n:r.keeps}) + nl;
+  out += nl + "— " + t("brand","Coconut Kitchen");
+  return out;
+}
+
+async function shareText(raw){
+  const text = recipeText(raw), title = L(raw).name;
+  try {
+    if(navigator.share){ await navigator.share({title:title, text:text}); return; }
+  } catch(e){ if(e && e.name === "AbortError") return; }
+  try { await navigator.clipboard.writeText(text); toast(t("copied","Recipe copied")); }
+  catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast(t("copied","Recipe copied")); } catch(e2){}
+    document.body.removeChild(ta);
+  }
+}
+
+applyLang(); paintSavedNote(); paintCatList(); renderFilters(); render(); gauge();
 </script>
 </body>
 </html>
